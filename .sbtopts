@@ -1,2 +1,2 @@
 -mem 1024
--J-Xmx6g
+-J-Xmx1024m

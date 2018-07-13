@@ -17,6 +17,7 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-actor" % "2.5.+",
   "com.typesafe.scala-logging" %% "scala-logging" % "3.+",
   "ch.qos.logback" % "logback-classic" % "1.+",
+  "org.bouncycastle" % "bcprov-jdk15on" % "1.+",
 
   "org.scalatest" %% "scalatest" % "3.0.3" % "test"
 )
@@ -33,7 +34,7 @@ lazy val basic = Project("basic-with-separate-config", file("."))
     testFrameworks += new TestFramework("org.scalameter.ScalaMeterFramework"),
     parallelExecution in Benchmark := false,
     logBuffered := false,
-    javaOptions += "-Xmx4G"
+    javaOptions += "-Xmx1024G"
   )
 ) configs(
   Benchmark
@@ -47,7 +48,7 @@ publishMavenStyle := true
 
 publishArtifact in Test := false
 
-fork := true
+fork := false
 
 pomIncludeRepository := { _ => false }
 
