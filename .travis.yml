@@ -2,6 +2,10 @@ sudo: true
 language: scala
 jdk:
   - oraclejdk8
+branches:
+  only:
+    - master
+    - /^\d\.\d+$/
 scala:
   - 2.12.3
 branches:
