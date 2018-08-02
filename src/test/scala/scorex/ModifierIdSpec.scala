@@ -1,6 +1,6 @@
 package scorex
 
-import scorex.core._
+import scorex.util._
 import org.scalatest.{FlatSpec, Matchers}
 
 class ModifierIdSpec extends FlatSpec with Matchers {

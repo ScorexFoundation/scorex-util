@@ -1,9 +1,9 @@
 package scorex
 
-import supertagged.TaggedType
 import scorex.crypto.encode.Base16
+import supertagged.TaggedType
 
-object core {
+package object util {
 
   object ModifierId extends TaggedType[String]
   type ModifierId = ModifierId.Type
