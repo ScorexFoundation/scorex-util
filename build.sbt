@@ -3,7 +3,7 @@ name := "scorex-util"
 
 organization := "org.scorexfoundation"
 
-version := "0.1.0-SNAPSHOT"
+version := "0.1.1-SNAPSHOT"
 
 scalaVersion := "2.12.6"
 
@@ -16,8 +16,9 @@ resolvers ++= Seq("Sonatype Releases" at "https://oss.sonatype.org/content/repos
 libraryDependencies ++= Seq(
   "com.typesafe.scala-logging" %% "scala-logging" % "3.+",
   "ch.qos.logback" % "logback-classic" % "1.+",
-
-  "org.scalatest" %% "scalatest" % "3.0.3" % "test"
+  "org.rudogma" % "supertagged_2.12" % "1.4",
+  "org.scalatest" %% "scalatest" % "3.0.3" % "test",
+  "org.scalacheck" %% "scalacheck" % "1.13.+" % "test"
 )
 
 publishMavenStyle in ThisBuild := true
