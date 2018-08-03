@@ -16,10 +16,9 @@ resolvers ++= Seq("Sonatype Releases" at "https://oss.sonatype.org/content/repos
 libraryDependencies ++= Seq(
   "com.typesafe.scala-logging" %% "scala-logging" % "3.+",
   "ch.qos.logback" % "logback-classic" % "1.+",
-  "org.scorexfoundation" %% "scrypto" % "2.+",
   "org.rudogma" % "supertagged_2.12" % "1.4",
-
-  "org.scalatest" %% "scalatest" % "3.0.3" % "test"
+  "org.scalatest" %% "scalatest" % "3.0.3" % "test",
+  "org.scalacheck" %% "scalacheck" % "1.13.+" % "test"
 )
 
 publishMavenStyle in ThisBuild := true
