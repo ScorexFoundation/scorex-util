@@ -1,6 +1,6 @@
 package scorex
 
-import scorex.crypto.encode.Base16
+import scorex.util.encode.Base16
 import supertagged.TaggedType
 
 package object util {

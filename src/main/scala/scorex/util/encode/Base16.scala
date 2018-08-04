@@ -1,4 +1,4 @@
-package scorex.crypto.encode
+package scorex.util.encode
 
 import java.io.IOException
 
