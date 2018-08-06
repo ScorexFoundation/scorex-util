@@ -1,10 +1,8 @@
-package scorex.crypto.encode
+package scorex.util.encode
 
 import java.util
 
 import org.scalacheck.Arbitrary
-import org.scalatest.prop.{GeneratorDrivenPropertyChecks, PropertyChecks}
-import org.scalatest.{Matchers, PropSpec}
 
 class Base58Specification extends EncoderSpecification {
 

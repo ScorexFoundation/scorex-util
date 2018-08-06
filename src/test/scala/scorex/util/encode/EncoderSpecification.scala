@@ -1,7 +1,7 @@
-package scorex.crypto.encode
+package scorex.util.encode
 
-import org.scalatest.{Matchers, PropSpec}
 import org.scalatest.prop.{GeneratorDrivenPropertyChecks, PropertyChecks}
+import org.scalatest.{Matchers, PropSpec}
 
 trait EncoderSpecification extends PropSpec
   with PropertyChecks
