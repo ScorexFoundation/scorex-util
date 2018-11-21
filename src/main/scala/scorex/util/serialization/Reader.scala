@@ -1,10 +1,19 @@
 package scorex.util.serialization
 
+
 trait Reader {
 
   type CH
 
+  def newReader(chunk: CH): Reader.Aux[CH]
+
   def getChunk(size: Int): CH
+
+  /**
+    * Decode String is shorter than 256 bytes
+    * @return
+    */
+  def getShortString(): String
   /**
     * Get a byte at current position without advancing the position.
     * @return byte at current position
@@ -59,3 +68,8 @@ trait Reader {
   def position_=(p: Int): Unit
   def remaining: Int
 }
+
+object Reader {
+  type Aux[CCH] = Reader{ type CH = CCH }
+}
+

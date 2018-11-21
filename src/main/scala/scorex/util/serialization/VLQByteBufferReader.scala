@@ -2,7 +2,9 @@ package scorex.util.serialization
 
 import java.nio.ByteBuffer
 import java.util.BitSet
+
 import scorex.util.Extensions._
+import scorex.util.serialization.Reader.Aux
 
 /**
   * Not thread safe
@@ -11,6 +13,10 @@ class VLQByteBufferReader(buf: ByteBuffer) extends Reader {
   import VLQByteBufferReader._
 
   type CH = ByteBuffer
+
+  override def newReader(chunk: ByteBuffer): Aux[ByteBuffer] = {
+    new VLQByteBufferReader(chunk)
+  }
 
   @inline override def getChunk(size: Int): ByteBuffer = {
     ByteBuffer.wrap(getBytes(size))
@@ -102,6 +108,16 @@ class VLQByteBufferReader(buf: ByteBuffer) extends Reader {
   }
 
   @inline override def getOption[T](getValue: => T): Option[T] = buf.getOption(getValue)
+
+  /**
+    * Decode String is shorter than 256 bytes
+    *
+    * @return
+    */
+  @inline override def getShortString(): String = {
+    val size = getUByte()
+    new String(buf.getBytes(size))
+  }
 
   private var _mark: Int = _
   @inline override def mark(): this.type = {

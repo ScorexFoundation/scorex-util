@@ -4,6 +4,7 @@ import java.util.{Arrays, BitSet}
 
 import scorex.util.ByteArrayBuilder
 import scorex.util.Extensions._
+import scorex.util.serialization.Writer.Aux
 
 /**
   * Not thread safe
@@ -12,8 +13,8 @@ class VLQByteBufferWriter(b: ByteArrayBuilder) extends Writer {
   import VLQByteBufferWriter._
   override type CH = ByteArrayBuilder
 
-  @inline def toBytes: Array[Byte] = {
-    b.toBytes
+  @inline override def newWriter(): Aux[ByteArrayBuilder] = {
+    new VLQByteBufferWriter(new ByteArrayBuilder())
   }
 
   @inline override def putChunk(chunk: ByteArrayBuilder): this.type = {
@@ -133,7 +134,28 @@ class VLQByteBufferWriter(b: ByteArrayBuilder) extends Writer {
 
   @inline override def putOption[T](x: Option[T])(putValue: (this.type, T) => Unit): this.type = { b.appendOption(x)(v => putValue(this, v)); this }
 
-//  @inline override def toBytes: Array[Byte] = b.toBytes
+  /**
+    * Encode String is shorter than 256 bytes
+    *
+    * @param s String
+    * @return
+    */
+  override def putShortString(s: String): VLQByteBufferWriter.this.type = {
+    val bytes = s.getBytes
+    require(bytes.size < 256)
+    putUByte(bytes.size.toByte)
+    putBytes(bytes)
+    this
+  }
+
+  override def length(): Int = b.length()
+
+  override def result(): ByteArrayBuilder = b
+
+  @inline def toBytes: Array[Byte] = {
+    b.toBytes
+  }
+
 }
 
 object VLQByteBufferWriter {

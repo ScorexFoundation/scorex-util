@@ -14,6 +14,7 @@ resolvers ++= Seq("Sonatype Releases" at "https://oss.sonatype.org/content/repos
 )
 
 libraryDependencies ++= Seq(
+  "com.typesafe.akka" %% "akka-actor" % "2.5.+",
   "com.typesafe.scala-logging" %% "scala-logging" % "3.+",
   "ch.qos.logback" % "logback-classic" % "1.+",
   "org.rudogma" % "supertagged_2.12" % "1.4",

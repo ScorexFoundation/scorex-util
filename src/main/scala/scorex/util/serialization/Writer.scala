@@ -3,6 +3,14 @@ package scorex.util.serialization
 trait Writer {
   type CH
 
+  def length(): Int
+
+  def newWriter(): Writer.Aux[CH]
+
+  def append(writer: Writer.Aux[CH]): this.type = {
+    putChunk(writer.result())
+  }
+
   def putChunk(chunk: CH): this.type
 
   def put(x: Byte): this.type
@@ -69,4 +77,18 @@ trait Writer {
   def putBits(xs: Array[Boolean]): this.type
 
   def putOption[T](x: Option[T])(putValue: (this.type, T) => Unit): this.type
+
+  /**
+    * Encode String is shorter than 256 bytes
+    * @param s String
+    * @return
+    */
+  def putShortString(s: String): this.type
+
+  def result(): CH
+
+}
+
+object Writer {
+  type Aux[CCH] = Writer { type CH = CCH }
 }
