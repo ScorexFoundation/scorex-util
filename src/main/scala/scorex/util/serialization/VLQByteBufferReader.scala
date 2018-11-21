@@ -115,10 +115,6 @@ class VLQByteBufferReader(buf: ByteBuffer) extends Reader {
   @inline override def position_=(p: Int): Unit = buf.position(p)
 
   @inline override def remaining: Int = buf.remaining()
-
-  private var lvl: Int = 0
-  @inline override def level: Int = lvl
-  @inline override def level_=(v: Int): Unit = lvl = v
 }
 
 object VLQByteBufferReader {

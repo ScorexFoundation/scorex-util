@@ -58,6 +58,4 @@ trait Reader {
   def position: Int
   def position_=(p: Int): Unit
   def remaining: Int
-  def level: Int
-  def level_=(v: Int): Unit
 }
