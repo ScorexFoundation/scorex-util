@@ -6,8 +6,8 @@ import org.scalacheck.{Arbitrary, Gen}
 import org.scalatest.prop.PropertyChecks
 import org.scalatest.{Assertion, Matchers, PropSpec}
 import scorex.util.{ByteArrayBuilder, Generators}
-import scorex.util.serialization.VLQByteBufferReader.{decodeZigZagInt, decodeZigZagLong}
-import scorex.util.serialization.VLQByteBufferWriter.{encodeZigZagInt, encodeZigZagLong}
+import scorex.util.serialization.VLQReader.{decodeZigZagInt, decodeZigZagLong}
+import scorex.util.serialization.VLQWriter.{encodeZigZagInt, encodeZigZagLong}
 import scorex.util.Helpers._
 
 class VLQByteBufferReaderWriterImpSpecification extends PropSpec

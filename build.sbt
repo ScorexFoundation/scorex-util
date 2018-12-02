@@ -3,7 +3,7 @@ name := "scorex-util"
 
 organization := "org.scorexfoundation"
 
-version := "0.1.2-new-serialization-SNAPSHOT"
+version := "0.1.3-SNAPSHOT"
 
 scalaVersion := "2.12.6"
 
