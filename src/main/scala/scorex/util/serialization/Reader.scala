@@ -14,13 +14,17 @@ trait Reader {
     * @return
     */
   def getShortString(): String
+
   /**
     * Get a byte at current position without advancing the position.
     * @return byte at current position
     */
   def peekByte(): Byte
+
   def getByte(): Byte
+
   def getUByte(): Int
+
   def getShort(): Short
 
   /**
@@ -61,11 +65,17 @@ trait Reader {
     * @return decoded array of boolean values
     */
   def getBits(size: Int): Array[Boolean]
+
   def getOption[T](getValue: => T): Option[T]
+
   def mark(): this.type
+
   def consumed: Int
+
   def position: Int
+
   def position_=(p: Int): Unit
+
   def remaining: Int
 }
 

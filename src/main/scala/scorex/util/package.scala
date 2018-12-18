@@ -12,11 +12,11 @@ package object util {
 
   def idToBytes(id: ModifierId): Array[Byte] = Base16.decode(id).get
 
-  implicit class ModifierIdOps(m: ModifierId) {
+  implicit class ModifierIdOps(val m: ModifierId) extends AnyVal {
     @inline def toBytes: Array[Byte] = idToBytes(m)
   }
 
-  implicit class ByteArrayOps(b: Array[Byte]) {
+  implicit class ByteArrayOps(val b: Array[Byte]) extends AnyVal  {
     @inline def toModifierId: ModifierId = bytesToId(b)
   }
 }

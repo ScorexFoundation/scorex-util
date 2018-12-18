@@ -10,7 +10,7 @@ import scorex.util.serialization.VLQReader.{decodeZigZagInt, decodeZigZagLong}
 import scorex.util.serialization.VLQWriter.{encodeZigZagInt, encodeZigZagLong}
 import scorex.util.Helpers._
 
-class VLQByteBufferReaderWriterImpSpecification extends PropSpec
+class ByteReaderWriterImpSpecification extends PropSpec
   with Generators
   with PropertyChecks
   with Matchers {
@@ -113,7 +113,7 @@ class VLQByteBufferReaderWriterImpSpecification extends PropSpec
         case v: Array[Boolean] =>
           val size = reader.getUShort()
           reader.getBits(size) shouldEqual v
-        case ref@_ => fail(s"reader: unsupported value type: ${ref.getClass}");
+        case ref => fail(s"reader: unsupported value type: ${ref.getClass}");
       }
     }
   }
@@ -239,7 +239,7 @@ class VLQByteBufferReaderWriterImpSpecification extends PropSpec
     }
   }
 
-  property("Col[Boolean] bit encoding format") {
+  property("Coll[Boolean] bit encoding format") {
     val expectations = Seq[(Array[Boolean], Array[Byte])](
       Array[Boolean]() -> Array[Byte](),
       Array(false) -> Array(0),
@@ -252,8 +252,8 @@ class VLQByteBufferReaderWriterImpSpecification extends PropSpec
       (Array.fill(10)(false) :+ true) -> Array(0, 4) // 00000000 00000100
     )
     expectations.foreach { case (bools, bytes) =>
-        byteArrayWriter().putBits(bools).toBytes shouldEqual bytes
-        byteBufReader(bytes).getBits(bools.length) shouldEqual bools
+      byteArrayWriter().putBits(bools).toBytes shouldEqual bytes
+      byteBufReader(bytes).getBits(bools.length) shouldEqual bools
     }
   }
 

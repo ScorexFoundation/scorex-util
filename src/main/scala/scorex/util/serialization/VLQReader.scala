@@ -5,7 +5,6 @@ import VLQReader._
 
 trait VLQReader extends Reader {
 
-
   @inline override def getUByte(): Int = getByte() & 0xFF
 
   /**
@@ -115,9 +114,10 @@ object VLQReader {
     * @param n unsigned Int previously encoded with [[VLQByteBufferWriter.encodeZigZagInt]]
     * @return signed Int
     */
-  def decodeZigZagInt(n: Int): Int =
-  // source: http://github.com/google/protobuf/blob/a7252bf42df8f0841cf3a0c85fdbf1a5172adecb/java/core/src/main/java/com/google/protobuf/CodedInputStream.java#L553
+  def decodeZigZagInt(n: Int): Int = {
+    // source: http://github.com/google/protobuf/blob/a7252bf42df8f0841cf3a0c85fdbf1a5172adecb/java/core/src/main/java/com/google/protobuf/CodedInputStream.java#L553
     (n >>> 1) ^ -(n & 1)
+  }
 
   /**
     * Decode a signed value previously ZigZag-encoded with [[VLQByteBufferWriter.encodeZigZagLong]]
@@ -126,7 +126,8 @@ object VLQReader {
     * @param n unsigned Long previously encoded with [[VLQByteBufferWriter.encodeZigZagLong]]
     * @return signed Long
     */
-  def decodeZigZagLong(n: Long): Long =
-  // source: http://github.com/google/protobuf/blob/a7252bf42df8f0841cf3a0c85fdbf1a5172adecb/java/core/src/main/java/com/google/protobuf/CodedInputStream.java#L566
+  def decodeZigZagLong(n: Long): Long = {
+    // source: http://github.com/google/protobuf/blob/a7252bf42df8f0841cf3a0c85fdbf1a5172adecb/java/core/src/main/java/com/google/protobuf/CodedInputStream.java#L566
     (n >>> 1) ^ -(n & 1)
+  }
 }

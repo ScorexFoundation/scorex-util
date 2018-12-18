@@ -7,7 +7,7 @@ import scala.reflect.ClassTag
 
 object Extensions {
 
-  implicit class ByteOps(b: Byte) {
+  implicit class ByteOps(val b: Byte) extends AnyVal {
     @inline def toUByte: Int = b & 0xFF
     def addExact(b2: Byte): Byte = {
       val r = b + b2
@@ -31,7 +31,7 @@ object Extensions {
     }
   }
 
-  implicit class ShortOps(x: Short) {
+  implicit class ShortOps(val x: Short) extends AnyVal {
     def toByteExact: Byte = {
       if (x < Byte.MinValue || x > Byte.MaxValue)
         throw new ArithmeticException("Byte overflow")
@@ -60,7 +60,7 @@ object Extensions {
     }
   }
 
-  implicit class IntOps(x: Int) {
+  implicit class IntOps(val x: Int) extends AnyVal {
     def toByteExact: Byte = {
       if (x < Byte.MinValue || x > Byte.MaxValue)
         throw new ArithmeticException("Byte overflow")
@@ -74,7 +74,7 @@ object Extensions {
     }
   }
 
-  implicit class LongOps(x: Long) {
+  implicit class LongOps(val x: Long) extends AnyVal {
     def toByteExact: Byte = {
       if (x < Byte.MinValue || x > Byte.MaxValue)
         throw new ArithmeticException("Byte overflow")
@@ -94,12 +94,12 @@ object Extensions {
     }
   }
 
-  implicit class OptionOps[T](opt: Option[T]) {
+  implicit class OptionOps[T](val opt: Option[T]) extends AnyVal {
     /** Elvis operator for Option. See https://en.wikipedia.org/wiki/Elvis_operator*/
     def ?:(whenNone: => T): T = if (opt.isDefined) opt.get else whenNone
   }
 
-  implicit class TraversableOps[A, Source[X] <: Traversable[X]](xs: Source[A]) {
+  implicit class TraversableOps[A, Source[X] <: Traversable[X]](val xs: Source[A]) extends AnyVal {
 
     /** Applies 'f' to elements of 'xs' until 'f' returns Some(b),
       * which is immediately returned as result of this method.
@@ -132,7 +132,7 @@ object Extensions {
     }
   }
 
-  implicit class ByteArrayBuilderOps(b: ByteArrayBuilder) {
+  implicit class ByteArrayBuilderOps(val b: ByteArrayBuilder) extends AnyVal {
     def appendOption[T](opt: Option[T])(putValue: T => Unit): ByteArrayBuilder = {
       opt match {
         case Some(v) =>
@@ -145,7 +145,7 @@ object Extensions {
     }
   }
 
-  implicit class ByteBufferOps(buf: ByteBuffer) {
+  implicit class ByteBufferOps(val buf: ByteBuffer) extends AnyVal {
     def toBytes: Array[Byte] = {
       val res = new Array[Byte](buf.position())
       buf.array().copyToArray(res, 0, res.length)
