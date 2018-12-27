@@ -3,7 +3,7 @@ package scorex.util.encode
 import org.scalatest.prop.{GeneratorDrivenPropertyChecks, PropertyChecks}
 import org.scalatest.{Matchers, PropSpec}
 
-trait EncoderSpecification extends PropSpec
+trait BytesEncoderSpecification extends PropSpec
   with PropertyChecks
   with GeneratorDrivenPropertyChecks
   with Matchers {
