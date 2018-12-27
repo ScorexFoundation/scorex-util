@@ -19,9 +19,16 @@ class VLQByteBufferReader(buf: ByteBuffer) extends VLQReader {
   @inline override def getChunk(size: Int): ByteBuffer = ByteBuffer.wrap(getBytes(size))
 
   @inline override def peekByte(): Byte = buf.array()(buf.position())
+
   @inline override def getByte(): Byte = buf.get
+
   @inline override def getShort(): Short = buf.getShort()
-  @inline override def getBytes(size: Int): Array[Byte] = buf.getBytes(size)
+
+  @inline override def getBytes(size: Int): Array[Byte] = {
+    val res = new Array[Byte](size)
+    buf.get(res)
+    res
+  }
 
   private var _mark: Int = _
   @inline override def mark(): this.type = {

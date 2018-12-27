@@ -4,7 +4,7 @@ import java.util
 
 import org.scalacheck.Arbitrary
 
-class Base58Specification extends EncoderSpecification {
+class Base58Specification extends BytesEncoderSpecification {
 
   override val encoder: BytesEncoder = Base58
 

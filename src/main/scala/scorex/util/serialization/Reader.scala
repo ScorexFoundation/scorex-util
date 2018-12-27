@@ -3,10 +3,23 @@ package scorex.util.serialization
 
 trait Reader {
 
+  /**
+    * Type of encoded data
+    */
   type CH
 
+  /**
+    * Creates new instance of this Reader
+    * @param chunk encoded data
+    * @return
+    */
   def newReader(chunk: CH): Reader.Aux[CH]
 
+  /**
+    * Returns encoded data at current position
+    * @param size
+    * @return
+    */
   def getChunk(size: Int): CH
 
   /**
@@ -21,10 +34,22 @@ trait Reader {
     */
   def peekByte(): Byte
 
+  /**
+    * Decode signed byte
+    * @return Byte
+    */
   def getByte(): Byte
 
+  /**
+    * Decode positive Byte
+    * @return signed Int
+    */
   def getUByte(): Int
 
+  /**
+    * Decode signed short
+    * @return Short
+    */
   def getShort(): Short
 
   /**
@@ -57,6 +82,11 @@ trait Reader {
     */
   def getULong(): Long
 
+  /**
+    * Decode array of byte values
+    * @param size expected size of decoded array
+    * @return
+    */
   def getBytes(size: Int): Array[Byte]
 
   /**
@@ -66,16 +96,41 @@ trait Reader {
     */
   def getBits(size: Int): Array[Boolean]
 
+  /**
+    * Decode optional value
+    * @param getValue function to decode value, if optional value is nonempty
+    * @return optional value
+    */
   def getOption[T](getValue: => T): Option[T]
 
+  /**
+    * Sets the mark to current position
+    */
   def mark(): this.type
 
+  /**
+    * Returns the number of decoded elements
+    * @return The number of decoded elements
+    */
   def consumed: Int
 
+  /**
+    * Returns current position
+    * @return position
+    */
   def position: Int
 
+  /**
+    * Sets position
+    * @param p position
+    */
   def position_=(p: Int): Unit
 
+  /**
+    * Returns the number of elements between the current position and the
+    * end of Reader
+    * @return The number of elements remaining in th Reader
+    */
   def remaining: Int
 }
 

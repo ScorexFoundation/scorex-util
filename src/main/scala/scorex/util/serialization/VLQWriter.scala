@@ -1,9 +1,12 @@
 package scorex.util.serialization
 
 import java.util.{Arrays, BitSet}
-import VLQWriter._
+import scorex.util.encode.ZigZagEncoder._
 
 trait VLQWriter extends Writer {
+
+  def toBytes: Array[Byte]
+
   /**
     * Encode unsigned Short value using VLQ.
     * Only positive values are supported, Use [[putShort]]
@@ -25,7 +28,7 @@ trait VLQWriter extends Writer {
     * Use [[putUInt]] to encode values that are positive.
     *
     * @see [[https://en.wikipedia.org/wiki/Variable-length_quantity]]
-    * @note Have to be decoded '''only''' with [[VLQByteBufferReader.getInt]]
+    * @note Have to be decoded '''only''' with [[VLQReader.getInt]]
     *       The resulting varint uses ZigZag encoding, which is much more efficient at
     *       encoding negative values than pure VLQ.
     * @param x prefer signed Int
@@ -53,7 +56,7 @@ trait VLQWriter extends Writer {
     * Use [[putULong]] to encode values that are positive.
     *
     * @see [[https://en.wikipedia.org/wiki/Variable-length_quantity]]
-    * @note Have to be decoded '''only''' with [[VLQByteBufferReader.getLong]]
+    * @note Have to be decoded '''only''' with [[VLQReader.getLong]]
     *       The resulting varint uses ZigZag encoding, which is much more efficient at
     *       encoding negative values than pure VLQ.
     * @param x prefer signed Long
@@ -131,39 +134,4 @@ trait VLQWriter extends Writer {
     putBytes(bytes)
     this
   }
-}
-
-object VLQWriter {
-
-  /**
-    * Encode a ZigZag-encoded 32-bit value.  ZigZag encodes signed integers
-    * into values that can be efficiently encoded with varint.  (Otherwise,
-    * negative values must be sign-extended to 64 bits to be varint encoded,
-    * thus always taking 10 bytes on the wire.)
-    *
-    * @see [[https://developers.google.com/protocol-buffers/docs/encoding#types]]
-    *
-    * @param n signed Int
-    * @return unsigned Int stored in a signed Int
-    */
-  def encodeZigZagInt(n: Int): Int =
-  // Note:  the right-shift must be arithmetic
-  // source: http://github.com/google/protobuf/blob/a7252bf42df8f0841cf3a0c85fdbf1a5172adecb/java/core/src/main/java/com/google/protobuf/CodedOutputStream.java#L934
-    (n << 1) ^ (n >> 31)
-
-  /**
-    * Encode a ZigZag-encoded 64-bit value.  ZigZag encodes signed integers
-    * into values that can be efficiently encoded with varint.  (Otherwise,
-    * negative values must be sign-extended to 64 bits to be varint encoded,
-    * thus always taking 10 bytes on the wire.)
-    *
-    * @see [[https://developers.google.com/protocol-buffers/docs/encoding#types]]
-    * @param n signed Long
-    * @return unsigned Long stored in a signed Long
-    */
-  def encodeZigZagLong(n: Long): Long =
-  // source: http://github.com/google/protobuf/blob/a7252bf42df8f0841cf3a0c85fdbf1a5172adecb/java/core/src/main/java/com/google/protobuf/CodedOutputStream.java#L949
-  // Note:  the right-shift must be arithmetic
-    (n << 1) ^ (n >> 63)
-
 }

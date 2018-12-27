@@ -1,19 +1,18 @@
 package scorex.util.serialization
 
-import java.nio.ByteBuffer
-
 import org.scalacheck.{Arbitrary, Gen}
 import org.scalatest.prop.PropertyChecks
 import org.scalatest.{Assertion, Matchers, PropSpec}
-import scorex.util.{ByteArrayBuilder, Generators}
-import scorex.util.serialization.VLQReader.{decodeZigZagInt, decodeZigZagLong}
-import scorex.util.serialization.VLQWriter.{encodeZigZagInt, encodeZigZagLong}
 import scorex.util.Helpers._
+import scorex.util.Generators
 
-class ByteReaderWriterImpSpecification extends PropSpec
+trait VLQReaderWriterSpecification extends PropSpec
   with Generators
   with PropertyChecks
   with Matchers {
+
+  def byteBufReader(bytes: Array[Byte]): VLQReader
+  def byteArrayWriter(): VLQWriter
 
   private val seqPrimValGen: Gen[Seq[Any]] = for {
     length <- Gen.chooseNum(1, 1000)
@@ -48,14 +47,6 @@ class ByteReaderWriterImpSpecification extends PropSpec
     (bytesFromInts(0x9b, 0xa8, 0xf9, 0xc2, 0xbb, 0xd6, 0x80, 0x85, 0xa6, 0x01),
       (0x1b << 0) | (0x28 << 7) | (0x79 << 14) | (0x42 << 21) | (0x3bL << 28) | (0x56L << 35) | (0x00L << 42) | (0x05L << 49) | (0x26L << 56) | (0x01L << 63))
   )
-
-  private def byteBufReader(bytes: Array[Byte]): VLQByteBufferReader = {
-    val buf = ByteBuffer.wrap(bytes)
-    buf.position(0)
-    new VLQByteBufferReader(buf)
-  }
-
-  private def byteArrayWriter(): VLQByteBufferWriter = new VLQByteBufferWriter(new ByteArrayBuilder())
 
   property("predefined long values and serialized data round trip") {
     expectedValues.foreach { case (bytes, v) =>
@@ -145,7 +136,7 @@ class ByteReaderWriterImpSpecification extends PropSpec
   }
 
   private def bytesZigZaggedLong(v: Long): Array[Byte] =
-    byteArrayWriter().putULong(encodeZigZagLong(v)).toBytes
+    byteArrayWriter().putLong(v).toBytes
 
   private def checkSizeZigZagged(low: Long, high: Long, size: Int): Unit = {
     // Gen.choose does not always include range limit values
@@ -204,40 +195,7 @@ class ByteReaderWriterImpSpecification extends PropSpec
     assertThrows[RuntimeException](byteBufReader(bytesFromInts(0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x00)).getULong())
   }
 
-  property("ZigZag encoding format") {
-    // source: http://github.com/google/protobuf/blob/a7252bf42df8f0841cf3a0c85fdbf1a5172adecb/java/core/src/test/java/com/google/protobuf/CodedOutputStreamTest.java#L281
-    assert(0 == encodeZigZagInt(0))
-    assert(1 == encodeZigZagInt(-1))
-    assert(2 == encodeZigZagInt(1))
-    assert(3 == encodeZigZagInt(-2))
-    assert(0x7FFFFFFE == encodeZigZagInt(0x3FFFFFFF))
-    assert(0x7FFFFFFF == encodeZigZagInt(0xC0000000))
-    assert(0xFFFFFFFE == encodeZigZagInt(0x7FFFFFFF))
-    assert(0xFFFFFFFF == encodeZigZagInt(0x80000000))
 
-    assert(0 == encodeZigZagLong(0))
-    assert(1 == encodeZigZagLong(-1))
-    assert(2 == encodeZigZagLong(1))
-    assert(3 == encodeZigZagLong(-2))
-    assert(0x000000007FFFFFFEL == encodeZigZagLong(0x000000003FFFFFFFL))
-    assert(0x000000007FFFFFFFL == encodeZigZagLong(0xFFFFFFFFC0000000L))
-    assert(0x00000000FFFFFFFEL == encodeZigZagLong(0x000000007FFFFFFFL))
-    assert(0x00000000FFFFFFFFL == encodeZigZagLong(0xFFFFFFFF80000000L))
-    assert(0xFFFFFFFFFFFFFFFEL == encodeZigZagLong(0x7FFFFFFFFFFFFFFFL))
-    assert(0xFFFFFFFFFFFFFFFFL == encodeZigZagLong(0x8000000000000000L))
-  }
-
-  property("ZigZag Long round trip") {
-    forAll(Gen.chooseNum(Long.MinValue, Long.MaxValue)) { v: Long =>
-      decodeZigZagLong(encodeZigZagLong(v)) shouldBe v
-    }
-  }
-
-  property("ZigZag Int round trip") {
-    forAll(Gen.chooseNum(Int.MinValue, Int.MaxValue)) { v: Int =>
-      decodeZigZagInt(encodeZigZagInt(v)) shouldBe v
-    }
-  }
 
   property("Coll[Boolean] bit encoding format") {
     val expectations = Seq[(Array[Boolean], Array[Byte])](

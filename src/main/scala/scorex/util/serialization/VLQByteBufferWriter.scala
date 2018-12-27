@@ -38,11 +38,11 @@ class VLQByteBufferWriter(b: ByteArrayBuilder) extends Writer with VLQWriter {
     this
   }
 
-  override def length(): Int = b.length()
+  @inline override def length(): Int = b.length()
 
-  override def result(): ByteArrayBuilder = b
+  @inline override def result(): ByteArrayBuilder = b
 
-  @inline def toBytes: Array[Byte] = {
+  @inline override def toBytes: Array[Byte] = {
     b.toBytes
   }
 }

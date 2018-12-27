@@ -1,14 +1,14 @@
 package scorex.util.serialization
 
 import java.util.BitSet
-import VLQReader._
+import scorex.util.encode.ZigZagEncoder._
 
 trait VLQReader extends Reader {
 
   @inline override def getUByte(): Int = getByte() & 0xFF
 
   /**
-    * Decode Short previously encoded with [[VLQByteBufferWriter.putUShort]] using VLQ.
+    * Decode Short previously encoded with [[VLQWriter.putUShort]] using VLQ.
     * @see [[https://en.wikipedia.org/wiki/Variable-length_quantity]]
     * @return Int
     * @throws AssertionError for deserialized values not in unsigned Short range
@@ -20,7 +20,7 @@ trait VLQReader extends Reader {
   }
 
   /**
-    * Decode signed Int previously encoded with [[VLQByteBufferWriter.putInt]] using VLQ with ZigZag.
+    * Decode signed Int previously encoded with [[VLQWriter.putInt]] using VLQ with ZigZag.
     *
     * @note Uses ZigZag encoding. Should be used to decode '''only''' a value that was previously
     *       encoded with [[VLQByteBufferWriter.putInt]].
@@ -33,7 +33,7 @@ trait VLQReader extends Reader {
   }
 
   /**
-    * Decode Int previously encoded with [[VLQByteBufferWriter.putUInt]] using VLQ.
+    * Decode Int previously encoded with [[VLQWriter.putUInt]] using VLQ.
     * @see [[https://en.wikipedia.org/wiki/Variable-length_quantity]]
     * @return Long
     */
@@ -44,17 +44,17 @@ trait VLQReader extends Reader {
   }
 
   /**
-    * Decode signed Long previously encoded with [[VLQByteBufferWriter.putLong]] using VLQ with ZigZag.
+    * Decode signed Long previously encoded with [[VLQWriter.putLong]] using VLQ with ZigZag.
     *
     * @note Uses ZigZag encoding. Should be used to decode '''only''' a value that was previously
-    *       encoded with [[VLQByteBufferWriter.putLong]].
+    *       encoded with [[VLQWriter.putLong]].
     * @see [[https://en.wikipedia.org/wiki/Variable-length_quantity]]
     * @return signed Long
     */
   @inline override def getLong(): Long = decodeZigZagLong(getULong())
 
   /**
-    * Decode Long previously encoded with [[VLQByteBufferWriter.putULong]] using VLQ.
+    * Decode Long previously encoded with [[VLQWriter.putULong]] using VLQ.
     * @see [[https://en.wikipedia.org/wiki/Variable-length_quantity]]
     * @return Long
     */
@@ -107,27 +107,5 @@ trait VLQReader extends Reader {
 
 object VLQReader {
 
-  /**
-    * Decode a signed value previously ZigZag-encoded with [[VLQByteBufferWriter.encodeZigZagInt]]
-    *
-    * @see [[https://developers.google.com/protocol-buffers/docs/encoding#types]]
-    * @param n unsigned Int previously encoded with [[VLQByteBufferWriter.encodeZigZagInt]]
-    * @return signed Int
-    */
-  def decodeZigZagInt(n: Int): Int = {
-    // source: http://github.com/google/protobuf/blob/a7252bf42df8f0841cf3a0c85fdbf1a5172adecb/java/core/src/main/java/com/google/protobuf/CodedInputStream.java#L553
-    (n >>> 1) ^ -(n & 1)
-  }
 
-  /**
-    * Decode a signed value previously ZigZag-encoded with [[VLQByteBufferWriter.encodeZigZagLong]]
-    *
-    * @see [[https://developers.google.com/protocol-buffers/docs/encoding#types]]
-    * @param n unsigned Long previously encoded with [[VLQByteBufferWriter.encodeZigZagLong]]
-    * @return signed Long
-    */
-  def decodeZigZagLong(n: Long): Long = {
-    // source: http://github.com/google/protobuf/blob/a7252bf42df8f0841cf3a0c85fdbf1a5172adecb/java/core/src/main/java/com/google/protobuf/CodedInputStream.java#L566
-    (n >>> 1) ^ -(n & 1)
-  }
 }

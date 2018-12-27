@@ -1,21 +1,49 @@
 package scorex.util.serialization
 
 trait Writer {
+
+  /**
+    * Type of encoded data
+    */
   type CH
 
+  /**
+    * Length of encoded data
+    * @return
+    */
   def length(): Int
 
+  /**
+    * Creates new instance of this Writer
+    * @return new instance of Writer
+    */
   def newWriter(): Writer.Aux[CH]
 
+  /**
+    * Append result of $writer to this Writer
+    * @param writer
+    * @return
+    */
   def append(writer: Writer.Aux[CH]): this.type = {
     putChunk(writer.result())
   }
 
+  /**
+    * Encode chunk
+    * @param chunk
+    * @return
+    */
   def putChunk(chunk: CH): this.type
 
+  /**
+    * Encode signed byte
+    * @param x byte value to encode
+    * @return
+    */
   def put(x: Byte): this.type
 
-  /** Encode integer as an unsigned byte asserting the range check
+  /**
+    * Encode integer as an unsigned byte asserting the range check
     * @param x integer value to encode
     * @return
     * @throws AssertionError if x is outside of the unsigned byte range
@@ -24,7 +52,21 @@ trait Writer {
     assert(x >= 0 && x <= 0xFF, s"$x is out of unsigned byte range")
     put(x.toByte)
   }
+
+  /**
+    * Encode boolean
+    * @param x boolean value to encode
+    * @return
+    */
   def putBoolean(x: Boolean): this.type
+
+  /**
+    * Encode signed Short
+    *
+    * Use [[putUShort]] to encode values that are positive.
+    * @param x short value to encode
+    * @return
+    */
   def putShort(x: Short): this.type
 
   /**
@@ -67,6 +109,12 @@ trait Writer {
     */
   def putULong(x: Long): this.type
 
+
+  /**
+    * Encode an array of bytes
+    * @param xs value to encode
+    * @return
+    */
   def putBytes(xs: Array[Byte]): this.type
 
   /**
@@ -76,6 +124,11 @@ trait Writer {
     */
   def putBits(xs: Array[Boolean]): this.type
 
+  /**
+    * Encode optional value
+    * @param x optional value to encode
+    * @param putValue procedure to encode value, if $x is nonempty
+    */
   def putOption[T](x: Option[T])(putValue: (this.type, T) => Unit): this.type
 
   /**
@@ -85,7 +138,12 @@ trait Writer {
     */
   def putShortString(s: String): this.type
 
+  /**
+    * Returns encoded result
+    * @return encoded result
+    */
   def result(): CH
+
 
 }
 

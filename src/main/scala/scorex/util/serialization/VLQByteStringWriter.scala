@@ -53,4 +53,8 @@ class VLQByteStringWriter extends VLQWriter {
   override def result(): ByteString = {
     builder.result()
   }
+
+  @inline override def toBytes: Array[Byte] = {
+    builder.result().toArray
+  }
 }
