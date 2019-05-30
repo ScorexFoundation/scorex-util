@@ -6,7 +6,7 @@ import akka.util.ByteString
 
 class VLQByteStringWriter extends VLQWriter {
   override type CH = ByteString
-  private implicit val byteOrder = ByteOrder.BIG_ENDIAN
+  private implicit val byteOrder: ByteOrder = ByteOrder.BIG_ENDIAN
 
   @inline
   override def newWriter(): Writer.Aux[CH] = {
@@ -32,14 +32,8 @@ class VLQByteStringWriter extends VLQWriter {
 
   @inline
   override def putBoolean(x: Boolean): this.type = {
-    val byte:Byte = if (x) 0x01 else 0x00
+    val byte: Byte = if (x) 0x01 else 0x00
     builder.putByte(byte)
-    this
-  }
-
-  @inline
-  override def putShort(x: Short): this.type = {
-    builder.putShort(x)
     this
   }
 

@@ -22,8 +22,6 @@ class VLQByteBufferReader(buf: ByteBuffer) extends VLQReader {
 
   @inline override def getByte(): Byte = buf.get
 
-  @inline override def getShort(): Short = buf.getShort()
-
   @inline override def getBytes(size: Int): Array[Byte] = {
     val res = new Array[Byte](size)
     buf.get(res)

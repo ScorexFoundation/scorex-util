@@ -1,11 +1,26 @@
 package scorex.util.serialization
 
+import java.util
 import java.util.BitSet
+
 import scorex.util.encode.ZigZagEncoder._
 
 trait VLQReader extends Reader {
 
   @inline override def getUByte(): Int = getByte() & 0xFF
+
+  /**
+    * Decode signed Short previously encoded with [[VLQWriter.putShort]] using VLQ and then ZigZag.
+    *
+    * @note Uses VLQ and then ZigZag encoding. Should be used to decode '''only''' a value that was previously
+    *       encoded with [[VLQByteBufferWriter.putShort]].
+    * @see [[https://en.wikipedia.org/wiki/Variable-length_quantity]]
+    * @return signed Short
+    */
+  @inline override def getShort(): Short = {
+    // should only be changed simultaneously with `putInt`
+    decodeZigZagInt(getULong().toInt).toShort
+  }
 
   /**
     * Decode Short previously encoded with [[VLQWriter.putUShort]] using VLQ.
@@ -70,13 +85,13 @@ trait VLQReader extends Reader {
       if ((b & 0x80) == 0) return result
       shift += 7
     }
-    sys.error(s"Cannot deserialize Long value. Unexpected reader $this with bytes remaining ${remaining}")
+    sys.error(s"Cannot deserialize Long value. Unexpected reader $this with bytes remaining $remaining")
     // see https://rosettacode.org/wiki/Variable-length_quantity for implementations in other languages
   }
 
   @inline override def getBits(size: Int): Array[Boolean] = {
     if (size == 0) return Array[Boolean]()
-    val bitSet = BitSet.valueOf(getBytes((size + 7) / 8))
+    val bitSet = util.BitSet.valueOf(getBytes((size + 7) / 8))
     val boolArray = new Array[Boolean](size)
     var i = 0
     while (i < size) {
