@@ -21,7 +21,7 @@ trait Writer {
 
   /**
     * Append result of $writer to this Writer
-    * @param writer
+    * @param writer is used as source of bytes
     * @return
     */
   def append(writer: Writer.Aux[CH]): this.type = {
@@ -30,7 +30,7 @@ trait Writer {
 
   /**
     * Encode chunk
-    * @param chunk
+    * @param chunk to put into this Writer
     * @return
     */
   def putChunk(chunk: CH): this.type
@@ -49,7 +49,7 @@ trait Writer {
     * @throws AssertionError if x is outside of the unsigned byte range
     */
   def putUByte(x: Int): this.type = {
-    assert(x >= 0 && x <= 0xFF, s"$x is out of unsigned byte range")
+    require(x >= 0 && x <= 0xFF, s"$x is out of unsigned byte range")
     put(x.toByte)
   }
 

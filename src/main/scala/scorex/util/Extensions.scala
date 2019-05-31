@@ -85,13 +85,13 @@ object Extensions {
   implicit class TraversableOps[A, Source[X] <: Traversable[X]](val xs: Source[A]) extends AnyVal {
 
     /**
-      * Safely casting each element of collection to be type of {@code B}.
-      * If element can not to be cast to {@code B} then `AssertionError` is thrown
+      * Safely casting each element of collection to be type of `B`.
+      * If element can not to be cast to `B` then `AssertionError` is thrown
       */
     def cast[B:ClassTag](implicit cbf: CanBuildFrom[Source[A], B, Source[B]]): Source[B] = {
 
       for (x <- xs) {
-        assert(x match { case _: B => true case _ => false}, s"Value $x doesn't conform to type ${reflect.classTag[B]}")
+        require(x match { case _: B => true case _ => false}, s"Value $x doesn't conform to type ${reflect.classTag[B]}")
       }
       xs.asInstanceOf[Source[B]]
     }

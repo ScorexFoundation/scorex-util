@@ -29,7 +29,7 @@ trait VLQReader extends Reader {
     */
   @inline override def getUShort(): Int = {
     val x = getULong().toInt
-    assert(x >= 0 && x <= 0xFFFF, s"$x is out of unsigned short range")
+    require(x >= 0 && x <= 0xFFFF, s"$x is out of unsigned short range")
     x
   }
 
@@ -53,7 +53,7 @@ trait VLQReader extends Reader {
     */
   @inline override def getUInt(): Long = {
     val x = getULong()
-    assert(x >= 0L && x <= 0xFFFFFFFFL, s"$x is out of unsigned int range")
+    require(x >= 0L && x <= 0xFFFFFFFFL, s"$x is out of unsigned int range")
     x
   }
 

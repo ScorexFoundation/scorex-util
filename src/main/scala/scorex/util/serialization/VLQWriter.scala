@@ -21,9 +21,7 @@ trait VLQWriter extends Writer {
     * @param x signed Short
     */
   @inline override def putShort(x: Short): this.type = {
-    if (x < Short.MinValue || x > Short.MaxValue)
-      throw new ArithmeticException(s"Cannot convert Int to Short due to overflow: $x")
-    putULong(encodeZigZagInt(x.toShort))
+    putULong(encodeZigZagInt(x))
   }
 
   /**
@@ -36,7 +34,7 @@ trait VLQWriter extends Writer {
     * @throws AssertionError for values not in unsigned Short range
     */
   @inline override def putUShort(x: Int): this.type = {
-    assert(x >= 0 && x <= 0xFFFF, s"Value $x is out of unsigned short range")
+    require(x >= 0 && x <= 0xFFFF, s"Value $x is out of unsigned short range")
     putUInt(x)
   }
 
@@ -64,7 +62,7 @@ trait VLQWriter extends Writer {
     * @throws AssertionError for values not in unsigned Int range
     */
   @inline override def putUInt(x: Long): this.type = {
-    assert(x >= 0 && x <= 0xFFFFFFFFL, s"$x is out of unsigned int range")
+    require(x >= 0 && x <= 0xFFFFFFFFL, s"$x is out of unsigned int range")
     putULong(x)
   }
 

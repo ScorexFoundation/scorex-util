@@ -3,7 +3,7 @@ package scorex.util.serialization
 import org.scalacheck.{Arbitrary, Gen}
 import org.scalatest.prop.PropertyChecks
 import org.scalatest.{Assertion, Matchers, PropSpec}
-import scorex.util.Helpers._
+import scorex.util.TestHelpers._
 import scorex.util.Generators
 
 trait VLQReaderWriterSpecification extends PropSpec
@@ -219,24 +219,24 @@ trait VLQReaderWriterSpecification extends PropSpec
     val w = byteArrayWriter()
     w.putUByte(0)
     w.putUByte(255)
-    an[AssertionError] should be thrownBy w.putUByte(-1)
-    an[AssertionError] should be thrownBy w.putUByte(256)
+    an[IllegalArgumentException] should be thrownBy w.putUByte(-1)
+    an[IllegalArgumentException] should be thrownBy w.putUByte(256)
   }
 
   property("putUShort range check assertion") {
     val w = byteArrayWriter()
     w.putUShort(0)
     w.putUShort(0xFFFF)
-    an[AssertionError] should be thrownBy w.putUShort(-1)
-    an[AssertionError] should be thrownBy w.putUShort(0xFFFF + 1)
+    an[IllegalArgumentException] should be thrownBy w.putUShort(-1)
+    an[IllegalArgumentException] should be thrownBy w.putUShort(0xFFFF + 1)
   }
 
   property("putUInt range check assertion") {
     val w = byteArrayWriter()
     w.putUInt(0)
     w.putUInt(0xFFFFFFFFL)
-    an[AssertionError] should be thrownBy w.putUInt(-1)
-    an[AssertionError] should be thrownBy w.putUInt(0xFFFFFFFFL + 1)
+    an[IllegalArgumentException] should be thrownBy w.putUInt(-1)
+    an[IllegalArgumentException] should be thrownBy w.putUInt(0xFFFFFFFFL + 1)
   }
 
   property("getUShort range check assertion") {
@@ -244,7 +244,7 @@ trait VLQReaderWriterSpecification extends PropSpec
       byteBufReader(byteArrayWriter().putUInt(in).toBytes).getUShort() shouldBe in
 
     def checkFail(in: Int): Unit =
-      an[AssertionError] should be thrownBy
+      an[IllegalArgumentException] should be thrownBy
         byteBufReader(byteArrayWriter().putUInt(in).toBytes).getUShort()
 
     check(0)
@@ -259,7 +259,7 @@ trait VLQReaderWriterSpecification extends PropSpec
       byteBufReader(byteArrayWriter().putULong(in).toBytes).getUInt() shouldBe in
 
     def checkFail(in: Long): Unit =
-      an[AssertionError] should be thrownBy
+      an[IllegalArgumentException] should be thrownBy
         byteBufReader(byteArrayWriter().putULong(in).toBytes).getUInt()
 
     check(0)
