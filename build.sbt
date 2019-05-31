@@ -42,3 +42,18 @@ credentials ++= (for {
 fork in ThisBuild := true
 
 pomIncludeRepository in ThisBuild := { _ => false }
+
+licenses := Seq("CC0" -> url("https://creativecommons.org/publicdomain/zero/1.0/legalcode"))
+homepage := Some(url("https://github.com/input-output-hk/scrypto"))
+pomExtra :=
+  <scm>
+    <url>git@github.com:ScorexProject/scrypto.git</url>
+    <connection>scm:git:git@github.com:ScorexProject/scrypto.git</connection>
+  </scm>
+    <developers>
+      <developer>
+        <id>kushti</id>
+        <name>Alexander Chepurnoy</name>
+        <url>http://chepurnoy.org/</url>
+      </developer>
+    </developers>
