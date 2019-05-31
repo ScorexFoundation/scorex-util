@@ -1,6 +1,7 @@
 package scorex.util.serialization
 
-import java.util.{Arrays, BitSet}
+import java.util
+
 import scorex.util.encode.ZigZagEncoder._
 
 trait VLQWriter extends Writer {
@@ -8,16 +9,32 @@ trait VLQWriter extends Writer {
   def toBytes: Array[Byte]
 
   /**
+    * Encode signed Short using ZigZag and then VLQ.
+    * Both negative and positive values are supported, but due to ZigZag encoding positive
+    * values is done less efficiently than by [[putUShort]].
+    * Use [[putUShort]] to encode values that are always positive.
+    *
+    * @see [[https://en.wikipedia.org/wiki/Variable-length_quantity]]
+    * @note Have to be decoded '''only''' with [[VLQReader.getShort]]
+    *       The resulting varint uses ZigZag encoding, which is much more efficient at
+    *       encoding negative values than pure VLQ.
+    * @param x signed Short
+    */
+  @inline override def putShort(x: Short): this.type = {
+    putULong(encodeZigZagInt(x))
+  }
+
+  /**
     * Encode unsigned Short value using VLQ.
     * Only positive values are supported, Use [[putShort]]
     * to encode negative and positive values.
     *
     * @see [[https://en.wikipedia.org/wiki/Variable-length_quantity]]
-    * @param x unsigned Short
+    * @param x unsigned Short in a range 0 <= x <= 0xFFFF represented as Int
     * @throws AssertionError for values not in unsigned Short range
     */
   @inline override def putUShort(x: Int): this.type = {
-    assert(x >= 0 && x <= 0xFFFF, s"$x is out of unsigned short range")
+    require(x >= 0 && x <= 0xFFFF, s"Value $x is out of unsigned short range")
     putUInt(x)
   }
 
@@ -31,7 +48,7 @@ trait VLQWriter extends Writer {
     * @note Have to be decoded '''only''' with [[VLQReader.getInt]]
     *       The resulting varint uses ZigZag encoding, which is much more efficient at
     *       encoding negative values than pure VLQ.
-    * @param x prefer signed Int
+    * @param x signed Int
     */
   @inline override def putInt(x: Int): this.type = putULong(encodeZigZagInt(x))
 
@@ -45,7 +62,7 @@ trait VLQWriter extends Writer {
     * @throws AssertionError for values not in unsigned Int range
     */
   @inline override def putUInt(x: Long): this.type = {
-    assert(x >= 0 && x <= 0xFFFFFFFFL, s"$x is out of unsigned int range")
+    require(x >= 0 && x <= 0xFFFFFFFFL, s"$x is out of unsigned int range")
     putULong(x)
   }
 
@@ -87,7 +104,7 @@ trait VLQWriter extends Writer {
       if ((value & ~0x7FL) == 0) {
         buffer(position) = value.asInstanceOf[Byte]
         position += 1
-        putBytes(Arrays.copyOf(buffer, position))
+        putBytes(util.Arrays.copyOf(buffer, position))
         return this
       } else {
         buffer(position) = ((value.asInstanceOf[Int] & 0x7F) | 0x80).toByte
@@ -101,11 +118,11 @@ trait VLQWriter extends Writer {
 
   @inline override def putBits(xs: Array[Boolean]): this.type = {
     if (xs.isEmpty) return this
-    val bitSet = new BitSet(xs.length)
+    val bitSet = new util.BitSet(xs.length)
     xs.zipWithIndex.foreach { case (bool, i) => bitSet.set(i, bool)}
     // pad the byte array to fix the "no bit was set" behaviour
     // see https://stackoverflow.com/questions/11209600/how-do-i-convert-a-bitset-initialized-with-false-in-a-byte-containing-0-in-java
-    val bytes = Arrays.copyOf(bitSet.toByteArray, (xs.length + 7) / 8)
+    val bytes = util.Arrays.copyOf(bitSet.toByteArray, (xs.length + 7) / 8)
     putBytes(bytes)
     this
   }

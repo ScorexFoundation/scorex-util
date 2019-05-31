@@ -22,11 +22,11 @@ class ExtensionsSpecification extends PropSpec
     }
 
     forAll(Gen.chooseNum(Short.MinValue, (Byte.MinValue - 1).toShort)) { x: Short =>
-      an[ArithmeticException] should be thrownBy(x.toByteExact)
+      an[ArithmeticException] should be thrownBy x.toByteExact
     }
 
     forAll(Gen.chooseNum((Byte.MaxValue + 1).toShort, Short.MaxValue)) { x: Short =>
-      an[ArithmeticException] should be thrownBy(x.toByteExact)
+      an[ArithmeticException] should be thrownBy x.toByteExact
     }
 
   }
@@ -36,12 +36,12 @@ class ExtensionsSpecification extends PropSpec
       x.toByteExact shouldBe x.toByte
     }
 
-    forAll(Gen.chooseNum(Int.MinValue, (Byte.MinValue - 1).toInt)) { x: Int =>
-      an[ArithmeticException] should be thrownBy(x.toByteExact)
+    forAll(Gen.chooseNum(Int.MinValue, Byte.MinValue - 1)) { x: Int =>
+      an[ArithmeticException] should be thrownBy x.toByteExact
     }
 
-    forAll(Gen.chooseNum((Byte.MaxValue + 1).toInt, Int.MaxValue)) { x: Int =>
-      an[ArithmeticException] should be thrownBy(x.toByteExact)
+    forAll(Gen.chooseNum(Byte.MaxValue + 1, Int.MaxValue)) { x: Int =>
+      an[ArithmeticException] should be thrownBy x.toByteExact
     }
   }
 
@@ -50,12 +50,12 @@ class ExtensionsSpecification extends PropSpec
       x.toShortExact shouldBe x.toShort
     }
 
-    forAll(Gen.chooseNum(Int.MinValue, (Short.MinValue - 1).toInt)) { x: Int =>
-      an[ArithmeticException] should be thrownBy(x.toShortExact)
+    forAll(Gen.chooseNum(Int.MinValue, Short.MinValue - 1)) { x: Int =>
+      an[ArithmeticException] should be thrownBy x.toShortExact
     }
 
-    forAll(Gen.chooseNum((Short.MaxValue + 1).toInt, Int.MaxValue)) { x: Int =>
-      an[ArithmeticException] should be thrownBy(x.toShortExact)
+    forAll(Gen.chooseNum(Short.MaxValue + 1, Int.MaxValue)) { x: Int =>
+      an[ArithmeticException] should be thrownBy x.toShortExact
     }
   }
 
@@ -65,11 +65,11 @@ class ExtensionsSpecification extends PropSpec
     }
 
     forAll(Gen.chooseNum(Long.MinValue, (Byte.MinValue - 1).toLong)) { x: Long =>
-      an[ArithmeticException] should be thrownBy(x.toByteExact)
+      an[ArithmeticException] should be thrownBy x.toByteExact
     }
 
     forAll(Gen.chooseNum((Byte.MaxValue + 1).toLong, Long.MaxValue)) { x: Long =>
-      an[ArithmeticException] should be thrownBy(x.toByteExact)
+      an[ArithmeticException] should be thrownBy x.toByteExact
     }
   }
 
@@ -79,11 +79,11 @@ class ExtensionsSpecification extends PropSpec
     }
 
     forAll(Gen.chooseNum(Long.MinValue, (Short.MinValue - 1).toLong)) { x: Long =>
-      an[ArithmeticException] should be thrownBy(x.toShortExact)
+      an[ArithmeticException] should be thrownBy x.toShortExact
     }
 
     forAll(Gen.chooseNum((Short.MaxValue + 1).toLong, Long.MaxValue)) { x: Long =>
-      an[ArithmeticException] should be thrownBy(x.toShortExact)
+      an[ArithmeticException] should be thrownBy x.toShortExact
     }
   }
 
@@ -93,17 +93,17 @@ class ExtensionsSpecification extends PropSpec
     }
 
     forAll(Gen.chooseNum(Long.MinValue, Int.MinValue.toLong - 1)) { x: Long =>
-      an[ArithmeticException] should be thrownBy(x.toIntExact)
+      an[ArithmeticException] should be thrownBy x.toIntExact
     }
 
     forAll(Gen.chooseNum(Int.MaxValue.toLong + 1, Long.MaxValue)) { x: Long =>
-      an[ArithmeticException] should be thrownBy(x.toIntExact)
+      an[ArithmeticException] should be thrownBy x.toIntExact
     }
   }
 
   property("TraversableOps.cast") {
     List(1,2,3,4).cast[Int] shouldBe List(1,2,3,4)
-    an[AssertionError] should be thrownBy List(1,"2",3,4).cast
+    an[IllegalArgumentException] should be thrownBy List(1,"2",3,4).cast
   }
 
 }

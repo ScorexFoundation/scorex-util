@@ -3,9 +3,9 @@ name := "scorex-util"
 
 organization := "org.scorexfoundation"
 
-version := "0.1.3"
+version := "0.1.4"
 
-scalaVersion := "2.12.6"
+scalaVersion := "2.12.8"
 
 resolvers ++= Seq("Sonatype Releases" at "https://oss.sonatype.org/content/repositories/releases/",
   "SonaType" at "https://oss.sonatype.org/content/groups/public",

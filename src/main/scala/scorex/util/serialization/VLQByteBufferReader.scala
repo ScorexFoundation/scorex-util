@@ -2,7 +2,6 @@ package scorex.util.serialization
 
 import java.nio.ByteBuffer
 
-import scorex.util.Extensions._
 import scorex.util.serialization.Reader.Aux
 
 /**
@@ -21,8 +20,6 @@ class VLQByteBufferReader(buf: ByteBuffer) extends VLQReader {
   @inline override def peekByte(): Byte = buf.array()(buf.position())
 
   @inline override def getByte(): Byte = buf.get
-
-  @inline override def getShort(): Short = buf.getShort()
 
   @inline override def getBytes(size: Int): Array[Byte] = {
     val res = new Array[Byte](size)

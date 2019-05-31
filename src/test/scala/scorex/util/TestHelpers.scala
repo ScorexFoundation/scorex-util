@@ -1,6 +1,6 @@
 package scorex.util
 
-object Helpers {
+object TestHelpers {
   /**
     * Helper to construct a byte array from a bunch of bytes. The inputs are actually ints so that I
     * can use hex notation and not get stupid errors about precision.
