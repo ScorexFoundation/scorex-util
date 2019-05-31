@@ -2,7 +2,6 @@ package scorex.util.serialization
 
 import java.nio.ByteBuffer
 
-import scorex.util.Extensions._
 import scorex.util.serialization.Reader.Aux
 
 /**

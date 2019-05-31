@@ -1,7 +1,6 @@
 package scorex.util.serialization
 
 import java.util
-import java.util.BitSet
 
 import scorex.util.encode.ZigZagEncoder._
 
