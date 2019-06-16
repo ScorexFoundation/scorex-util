@@ -268,4 +268,55 @@ trait VLQReaderWriterSpecification extends PropSpec
     checkFail(0xFFFFFFFFL + 1L)
     checkFail(Long.MaxValue)
   }
+
+  property("Byte roundtrip") {
+    forAll { v: Byte => byteBufReader(byteArrayWriter().put(v).toBytes).getByte() shouldBe v }
+  }
+
+  property("unsigned Byte roundtrip") {
+    forAll { v: Byte =>
+      val uv: Int = v & 0xFF
+      byteBufReader(byteArrayWriter().putUByte(uv).toBytes).getUByte() shouldBe uv
+    }
+  }
+
+  property("Short roundtrip") {
+    forAll { v: Short => byteBufReader(byteArrayWriter().putShort(v).toBytes).getShort() shouldBe v }
+  }
+
+  property("unsigned Short roundtrip") {
+    forAll { v: Short =>
+      val uv: Int = v & 0xFFFF
+      byteBufReader(byteArrayWriter().putUShort(uv).toBytes).getUShort() shouldBe uv
+    }
+  }
+
+  property("Int roundtrip") {
+    forAll { v: Int => byteBufReader(byteArrayWriter().putInt(v).toBytes).getInt() shouldBe v }
+  }
+
+  property("unsigned Int roundtrip") {
+    forAll { v: Int =>
+      val uv: Long = v.toLong + (Int.MinValue.toLong * -1)
+      byteBufReader(byteArrayWriter().putUInt(uv).toBytes).getUInt() shouldBe uv
+    }
+  }
+
+  property("Long roundtrip") {
+    forAll { v: Long => byteBufReader(byteArrayWriter().putLong(v).toBytes).getLong() shouldBe v }
+  }
+
+  property("ULong roundtrip") {
+    forAll { v: Long => byteBufReader(byteArrayWriter().putULong(v).toBytes).getULong() shouldBe v }
+  }
+
+  property("Boolean array roundtrip") {
+    forAll { v: Array[Boolean] => byteBufReader(byteArrayWriter().putBits(v).toBytes).getBits(v.length) shouldBe v }
+  }
+
+  property("short string roundtrip") {
+    forAll(Gen.alphaStr.suchThat(_.length < 256)) { v: String =>
+      byteBufReader(byteArrayWriter().putShortString(v).toBytes).getShortString() shouldBe v
+    }
+  }
 }
