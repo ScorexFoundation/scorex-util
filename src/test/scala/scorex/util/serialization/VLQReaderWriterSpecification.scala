@@ -53,10 +53,14 @@ trait VLQReaderWriterSpecification extends PropSpec
       val writer = byteArrayWriter()
       writer.putULong(v)
       val encodedBytes = writer.toBytes
-      encodedBytes shouldEqual bytes
+      withClue(s"for value $v: \n") {
+        encodedBytes shouldEqual bytes
+      }
 
       val r = byteBufReader(encodedBytes)
-      r.getULong() shouldEqual v
+      withClue(s"for bytes $bytes: \n") {
+        r.getULong() shouldEqual v
+      }
       r.remaining shouldBe 0
     }
   }
@@ -66,7 +70,7 @@ trait VLQReaderWriterSpecification extends PropSpec
     // and a good diversity withing a values of the each type
     forAll(seqPrimValGen, minSuccessful(500)) { values: Seq[Any] =>
       val writer = byteArrayWriter()
-      for(any <- values) {
+      for (any <- values) {
         any match {
           case v: Byte => writer.put(v)
           case v: Short =>
@@ -318,5 +322,179 @@ trait VLQReaderWriterSpecification extends PropSpec
     forAll(Gen.alphaStr.suchThat(_.length < 256)) { v: String =>
       byteBufReader(byteArrayWriter().putShortString(v).toBytes).getShortString() shouldBe v
     }
+  }
+
+  property("byte corner cases") {
+    def roundtrip(v: Byte, expected: Array[Byte]): Unit = {
+      val bytes = byteArrayWriter().put(v).toBytes
+      bytes shouldEqual expected
+      byteBufReader(expected).getByte() shouldBe v
+    }
+
+    roundtrip(Byte.MinValue, bytesFromInts(Byte.MinValue))
+    roundtrip(0, bytesFromInts(0))
+    roundtrip(Byte.MaxValue, bytesFromInts(Byte.MaxValue))
+  }
+
+  property("unsigned byte corner cases") {
+    def roundtrip(v: Int, expected: Array[Byte]): Unit = {
+      val bytes = byteArrayWriter().putUByte(v).toBytes
+      bytes shouldEqual expected
+      byteBufReader(expected).getUByte() shouldBe v
+    }
+
+    an[IllegalArgumentException] should be thrownBy roundtrip(-1, bytesFromInts(0))
+    roundtrip(0, bytesFromInts(0))
+    roundtrip(255, bytesFromInts(255))
+    an[IllegalArgumentException] should be thrownBy roundtrip(256, bytesFromInts(0))
+  }
+
+  private def prettyPrint(arr: Array[Byte]): String =
+    arr.map(b => String.format("0x%02X", Byte.box(b))).mkString(", ")
+
+  property("Short corner cases") {
+    def roundtrip(v: Short, expected: Array[Byte]): Unit = {
+      val bytes = byteArrayWriter().putShort(v).toBytes
+      withClue(s"for value $v got bytes ${prettyPrint(bytes)} (expected ${prettyPrint(expected)}): \n") {
+        bytes shouldEqual expected
+      }
+      byteBufReader(expected).getShort() shouldBe v
+    }
+
+    roundtrip(Short.MinValue, bytesFromInts(0xFF, 0xFF, 0x03))
+    roundtrip(-8193, bytesFromInts(0x81, 0x80, 0x01))
+    roundtrip(-8192, bytesFromInts(0xFF, 0x7F))
+    roundtrip(-65, bytesFromInts(0x81, 0x01))
+    roundtrip(-64, bytesFromInts(0x7F))
+    roundtrip(0, bytesFromInts(0))
+    roundtrip(63, bytesFromInts(0x7E))
+    roundtrip(64, bytesFromInts(0x80, 0x01))
+    roundtrip(8191, bytesFromInts(0xFE, 0x7F))
+    roundtrip(8192, bytesFromInts(0x80, 0x80, 0x01))
+    roundtrip(Short.MaxValue, bytesFromInts(0xFE, 0xFF, 0x03))
+  }
+
+  property("unsigned Short corner cases") {
+    def roundtrip(v: Int, expected: Array[Byte]): Unit = {
+      val bytes = byteArrayWriter().putUShort(v).toBytes
+      withClue(s"for value $v got bytes ${prettyPrint(bytes)} (expected ${prettyPrint(expected)}): \n") {
+        bytes shouldEqual expected
+      }
+      byteBufReader(expected).getUShort() shouldBe v
+    }
+
+    an[IllegalArgumentException] should be thrownBy roundtrip(-1, bytesFromInts(0))
+    roundtrip(0, bytesFromInts(0))
+    roundtrip(127, bytesFromInts(0x7F))
+    roundtrip(128, bytesFromInts(0x80, 0x01))
+    roundtrip(16383, bytesFromInts(0xFF, 0x7F))
+    roundtrip(16384, bytesFromInts(0x80, 0x80, 0x01))
+    roundtrip(65535, bytesFromInts(0xFF, 0xFF, 0x03))
+    an[IllegalArgumentException] should be thrownBy roundtrip(65536, bytesFromInts(0))
+  }
+
+  property("Int corner cases") {
+    def roundtrip(v: Int, expected: Array[Byte]): Unit = {
+      val bytes = byteArrayWriter().putInt(v).toBytes
+      withClue(s"for value $v got bytes ${prettyPrint(bytes)} (expected ${prettyPrint(expected)}): \n") {
+        bytes shouldEqual expected
+      }
+      byteBufReader(expected).getInt() shouldBe v
+    }
+    roundtrip(Int.MinValue, bytesFromInts(0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x01)) // 10 bytes
+    roundtrip(-1073741825,  bytesFromInts(0x81, 0x80, 0x80, 0x80, 0xF8, 0xFF, 0xFF, 0xFF, 0xFF, 0x01)) // 10 bytes
+    roundtrip(-1073741824,  bytesFromInts(0xFF, 0xFF, 0xFF, 0xFF, 0x07)) // 5 bytes
+    roundtrip(-134217729,   bytesFromInts(0x81, 0x80, 0x80, 0x80, 0x01)) // 5 bytes
+    roundtrip(-134217728,   bytesFromInts(0xFF, 0xFF, 0xFF, 0x7F)) // 4 bytes
+    roundtrip(-1048577,     bytesFromInts(0x81, 0x80, 0x80, 0x01)) // 4 bytes
+    roundtrip(-1048576,     bytesFromInts(0xFF, 0xFF, 0x7F))
+    roundtrip(-8193,        bytesFromInts(0x81, 0x80, 0x01))
+    roundtrip(-8192,        bytesFromInts(0xFF, 0x7F))
+    roundtrip(-65,          bytesFromInts(0x81, 0x01))
+    roundtrip(-64,          bytesFromInts(0x7F))
+    roundtrip(0,            bytesFromInts(0))
+    roundtrip(63,           bytesFromInts(0x7E))
+    roundtrip(64,           bytesFromInts(0x80, 0x01))
+    roundtrip(8191,         bytesFromInts(0xFE, 0x7F))
+    roundtrip(8192,         bytesFromInts(0x80, 0x80, 0x01))
+    roundtrip(1048575,      bytesFromInts(0xFE, 0xFF, 0x7F))
+    roundtrip(1048576,      bytesFromInts(0x80, 0x80, 0x80, 0x01)) // 4 bytes
+    roundtrip(134217727,    bytesFromInts(0xFE, 0xFF, 0xFF, 0x7F)) // 4 bytes
+    roundtrip(134217728,    bytesFromInts(0x80, 0x80, 0x80, 0x80, 0x01)) // 5 bytes
+    roundtrip(1073741823,   bytesFromInts(0xFE, 0xFF, 0xFF, 0xFF, 0x07)) // 5 bytes
+    roundtrip(1073741824,   bytesFromInts(0x80, 0x80, 0x80, 0x80, 0xF8, 0xFF, 0xFF, 0xFF, 0xFF, 0x01)) // 10 bytes
+    roundtrip(Int.MaxValue, bytesFromInts(0xFE, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x01)) // 10 bytes
+  }
+
+  property("unsigned Int corner cases") {
+    def roundtrip(v: Long, expected: Array[Byte]): Unit = {
+      val bytes = byteArrayWriter().putUInt(v).toBytes
+      withClue(s"for value $v got bytes ${prettyPrint(bytes)} (expected ${prettyPrint(expected)}): \n") {
+        bytes shouldEqual expected
+      }
+      byteBufReader(expected).getUInt() shouldBe v
+    }
+    an[IllegalArgumentException] should be thrownBy roundtrip(-1, bytesFromInts(0))
+    roundtrip(0, bytesFromInts(0))
+    roundtrip(127, bytesFromInts(0x7F))
+    roundtrip(128, bytesFromInts(0x80, 0x01))
+    roundtrip(16383, bytesFromInts(0xFF, 0x7F))
+    roundtrip(16384, bytesFromInts(0x80, 0x80, 0x01))
+    roundtrip(2097151, bytesFromInts(0xFF, 0xFF, 0x7F))
+    roundtrip(2097152, bytesFromInts(0x80, 0x80, 0x80, 0x01)) // 4 bytes
+    roundtrip(268435455, bytesFromInts(0xFF, 0xFF, 0xFF, 0x7F)) // 4 bytes
+    roundtrip(268435456, bytesFromInts(0x80, 0x80, 0x80, 0x80, 0x01)) // 5 bytes
+    roundtrip(Int.MaxValue.toLong * 2 + 1, bytesFromInts(0xFF, 0xFF, 0xFF, 0xFF, 0x0F)) // 5 bytes
+    an[IllegalArgumentException] should be thrownBy
+      roundtrip(Int.MaxValue.toLong * 2 + 2, bytesFromInts(0))
+  }
+
+  property("Long corner cases") {
+    def roundtrip(v: Long, expected: Array[Byte]): Unit = {
+      val bytes = byteArrayWriter().putLong(v).toBytes
+      withClue(s"for value $v got bytes ${prettyPrint(bytes)} (expected ${prettyPrint(expected)}): \n") {
+        bytes shouldEqual expected
+      }
+      byteBufReader(expected).getLong() shouldBe v
+    }
+    roundtrip(Long.MinValue,       bytesFromInts(0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x01)) // 10 bytes
+    roundtrip(Long.MinValue / 2 - 1, bytesFromInts(0x81, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x01)) // 10 bytes
+    roundtrip(Long.MinValue / 2,   bytesFromInts(0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x7F)) // 9 bytes
+    roundtrip(-36028797018963969L, bytesFromInts(0x81, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x01)) // 9 bytes
+    roundtrip(-36028797018963968L, bytesFromInts(0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x7F)) // 8 bytes
+    roundtrip(-281474976710657L,   bytesFromInts(0x81, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x01)) // 8 bytes
+    roundtrip(-281474976710656L,   bytesFromInts(0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x7F)) // 7 bytes
+    roundtrip(-2199023255553L,     bytesFromInts(0x81, 0x80, 0x80, 0x80, 0x80, 0x80, 0x01)) // 7 bytes
+    roundtrip(-2199023255552L,     bytesFromInts(0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x7F)) // 6 bytes
+    roundtrip(-17179869185L,       bytesFromInts(0x81, 0x80, 0x80, 0x80, 0x80, 0x01)) // 6 bytes
+    roundtrip(-17179869184L,       bytesFromInts(0xFF, 0xFF, 0xFF, 0xFF, 0x7F)) // 5 bytes
+    roundtrip(-134217729,          bytesFromInts(0x81, 0x80, 0x80, 0x80, 0x01)) // 5 bytes
+    roundtrip(-134217728,          bytesFromInts(0xFF, 0xFF, 0xFF, 0x7F)) // 4 bytes
+    roundtrip(-1048577,            bytesFromInts(0x81, 0x80, 0x80, 0x01)) // 4 bytes
+    roundtrip(-1048576,            bytesFromInts(0xFF, 0xFF, 0x7F))
+    roundtrip(-8193,               bytesFromInts(0x81, 0x80, 0x01))
+    roundtrip(-8192,               bytesFromInts(0xFF, 0x7F))
+    roundtrip(-65,                 bytesFromInts(0x81, 0x01))
+    roundtrip(-64,                 bytesFromInts(0x7F))
+    roundtrip(0,                   bytesFromInts(0))
+    roundtrip(63,                  bytesFromInts(0x7E))
+    roundtrip(64,                  bytesFromInts(0x80, 0x01))
+    roundtrip(8191,                bytesFromInts(0xFE, 0x7F))
+    roundtrip(8192,                bytesFromInts(0x80, 0x80, 0x01))
+    roundtrip(1048575,             bytesFromInts(0xFE, 0xFF, 0x7F))
+    roundtrip(1048576,             bytesFromInts(0x80, 0x80, 0x80, 0x01)) // 4 bytes
+    roundtrip(134217727,           bytesFromInts(0xFE, 0xFF, 0xFF, 0x7F)) // 4 bytes
+    roundtrip(134217728,           bytesFromInts(0x80, 0x80, 0x80, 0x80, 0x01)) // 5 bytes
+    roundtrip(17179869183L,        bytesFromInts(0xFE, 0xFF, 0xFF, 0xFF, 0x7F)) // 5 bytes
+    roundtrip(17179869184L,        bytesFromInts(0x80, 0x80, 0x80, 0x80, 0x80, 0x01)) // 6 bytes
+    roundtrip(2199023255551L,      bytesFromInts(0xFE, 0xFF, 0xFF, 0xFF, 0xFF, 0x7F)) // 6 bytes
+    roundtrip(2199023255552L,      bytesFromInts(0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x01)) // 7 bytes
+    roundtrip(281474976710655L,    bytesFromInts(0xFE, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x7F)) // 7 bytes
+    roundtrip(281474976710656L,    bytesFromInts(0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x01)) // 8 bytes
+    roundtrip(36028797018963967L,  bytesFromInts(0xFE, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x7F)) // 8 bytes
+    roundtrip(36028797018963968L,  bytesFromInts(0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x01)) // 9 bytes
+    roundtrip(Long.MaxValue / 2,   bytesFromInts(0xFE, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x7F)) // 9 bytes
+    roundtrip(Long.MaxValue / 2 + 1, bytesFromInts(0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x01)) // 10 bytes
+    roundtrip(Long.MaxValue,       bytesFromInts(0xFE, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x01)) // 10 bytes
   }
 }
