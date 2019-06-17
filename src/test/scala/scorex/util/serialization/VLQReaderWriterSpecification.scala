@@ -366,8 +366,9 @@ trait VLQReaderWriterSpecification extends PropSpec
     roundtrip(-8192, bytesFromInts(0xFF, 0x7F))
     roundtrip(-8191, bytesFromInts(0xFD, 0x7F))
     roundtrip(-66, bytesFromInts(0x83, 0x01))
-    byteBufReader( bytesFromInts(0x81, 0x00)).getShort() shouldBe -1
+    byteBufReader( bytesFromInts(0x83, 0x00)).getShort() shouldBe -2
     roundtrip(-65, bytesFromInts(0x81, 0x01))
+    byteBufReader( bytesFromInts(0x81, 0x00)).getShort() shouldBe -1
     roundtrip(-64, bytesFromInts(0x7F))
     roundtrip(-63, bytesFromInts(0x7D))
     roundtrip(-1, bytesFromInts(0x01))
@@ -375,7 +376,9 @@ trait VLQReaderWriterSpecification extends PropSpec
     roundtrip(1, bytesFromInts(0x02))
     roundtrip(62, bytesFromInts(0x7C))
     roundtrip(63, bytesFromInts(0x7E))
+    byteBufReader( bytesFromInts(0x80, 0x00)).getShort() shouldBe 0
     roundtrip(64, bytesFromInts(0x80, 0x01))
+    byteBufReader( bytesFromInts(0x82, 0x00)).getShort() shouldBe 1
     roundtrip(65, bytesFromInts(0x82, 0x01))
     roundtrip(8190, bytesFromInts(0xFC, 0x7F))
     roundtrip(8191, bytesFromInts(0xFE, 0x7F))
@@ -569,5 +572,26 @@ trait VLQReaderWriterSpecification extends PropSpec
     roundtrip(72057594037927935L, bytesFromInts(0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x7F)) // 8 bytes
     roundtrip(72057594037927936L, bytesFromInts(0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x01)) // 9 bytes
     roundtrip(Long.MaxValue, bytesFromInts(0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x7F)) // 10 bytes
+  }
+
+  private def printHolesInByteArraySpace(): Unit = {
+    var v = Short.MinValue
+    while (v <= Short.MaxValue) {
+      val bytes = BigInt(v).toByteArray
+      try {
+        val deserV = byteBufReader(bytes).getShort()
+        val roundtripBytes = byteArrayWriter().putShort(deserV).toBytes
+        if (!roundtripBytes.sameElements(bytes) && roundtripBytes(0) != bytes(0)) {
+          println(s"bytes from deserialized $deserV = ${prettyPrint(roundtripBytes)}, expected ${prettyPrint(bytes)}")
+        }
+      } catch {
+        case _: Throwable =>
+      }
+      v = (v + 1).toShort
+    }
+  }
+
+  ignore("find holes in byte array space of VLQ") {
+    printHolesInByteArraySpace()
   }
 }
