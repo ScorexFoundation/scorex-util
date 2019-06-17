@@ -594,4 +594,20 @@ trait VLQReaderWriterSpecification extends PropSpec
   ignore("find holes in byte array space of VLQ") {
     printHolesInByteArraySpace()
   }
+
+  property("putUShort, putUInt, putULong equivalence") {
+    forAll(Arbitrary.arbShort.arbitrary.suchThat(_ >= 0)) { v =>
+      val expected = byteArrayWriter().putUShort(v).toBytes
+      byteArrayWriter().putUInt(v).toBytes shouldEqual expected
+      byteArrayWriter().putULong(v).toBytes shouldEqual expected
+    }
+  }
+
+  property("putShort, putInt, putLong equivalence") {
+    forAll { v: Short =>
+      val expected = byteArrayWriter().putShort(v).toBytes
+      byteArrayWriter().putInt(v).toBytes shouldEqual expected
+      byteArrayWriter().putLong(v).toBytes shouldEqual expected
+    }
+  }
 }
