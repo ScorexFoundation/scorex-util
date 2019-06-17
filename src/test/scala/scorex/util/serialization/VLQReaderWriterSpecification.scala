@@ -366,6 +366,7 @@ trait VLQReaderWriterSpecification extends PropSpec
     roundtrip(-8192, bytesFromInts(0xFF, 0x7F))
     roundtrip(-8191, bytesFromInts(0xFD, 0x7F))
     roundtrip(-66, bytesFromInts(0x83, 0x01))
+    byteBufReader( bytesFromInts(0x81, 0x00)).getShort() shouldBe -1
     roundtrip(-65, bytesFromInts(0x81, 0x01))
     roundtrip(-64, bytesFromInts(0x7F))
     roundtrip(-63, bytesFromInts(0x7D))
