@@ -360,17 +360,26 @@ trait VLQReaderWriterSpecification extends PropSpec
       }
       byteBufReader(expected).getShort() shouldBe v
     }
-
     roundtrip(Short.MinValue, bytesFromInts(0xFF, 0xFF, 0x03))
+    roundtrip(-8194, bytesFromInts(0x83, 0x80, 0x01))
     roundtrip(-8193, bytesFromInts(0x81, 0x80, 0x01))
     roundtrip(-8192, bytesFromInts(0xFF, 0x7F))
+    roundtrip(-8191, bytesFromInts(0xFD, 0x7F))
+    roundtrip(-66, bytesFromInts(0x83, 0x01))
     roundtrip(-65, bytesFromInts(0x81, 0x01))
     roundtrip(-64, bytesFromInts(0x7F))
+    roundtrip(-63, bytesFromInts(0x7D))
+    roundtrip(-1, bytesFromInts(0x01))
     roundtrip(0, bytesFromInts(0))
+    roundtrip(1, bytesFromInts(0x02))
+    roundtrip(62, bytesFromInts(0x7C))
     roundtrip(63, bytesFromInts(0x7E))
     roundtrip(64, bytesFromInts(0x80, 0x01))
+    roundtrip(65, bytesFromInts(0x82, 0x01))
+    roundtrip(8190, bytesFromInts(0xFC, 0x7F))
     roundtrip(8191, bytesFromInts(0xFE, 0x7F))
     roundtrip(8192, bytesFromInts(0x80, 0x80, 0x01))
+    roundtrip(8193, bytesFromInts(0x82, 0x80, 0x01))
     roundtrip(Short.MaxValue, bytesFromInts(0xFE, 0xFF, 0x03))
   }
 
@@ -383,14 +392,22 @@ trait VLQReaderWriterSpecification extends PropSpec
       byteBufReader(expected).getUShort() shouldBe v
     }
 
+    an[IllegalArgumentException] should be thrownBy roundtrip(-2, bytesFromInts(0))
     an[IllegalArgumentException] should be thrownBy roundtrip(-1, bytesFromInts(0))
     roundtrip(0, bytesFromInts(0))
+    roundtrip(1, bytesFromInts(1))
+    roundtrip(126, bytesFromInts(0x7E))
     roundtrip(127, bytesFromInts(0x7F))
     roundtrip(128, bytesFromInts(0x80, 0x01))
+    roundtrip(129, bytesFromInts(0x81, 0x01))
+    roundtrip(16382, bytesFromInts(0xFE, 0x7F))
     roundtrip(16383, bytesFromInts(0xFF, 0x7F))
     roundtrip(16384, bytesFromInts(0x80, 0x80, 0x01))
+    roundtrip(16385, bytesFromInts(0x81, 0x80, 0x01))
+    roundtrip(65534, bytesFromInts(0xFE, 0xFF, 0x03))
     roundtrip(65535, bytesFromInts(0xFF, 0xFF, 0x03))
     an[IllegalArgumentException] should be thrownBy roundtrip(65536, bytesFromInts(0))
+    an[IllegalArgumentException] should be thrownBy roundtrip(65537, bytesFromInts(0))
   }
 
   property("Int corner cases") {
@@ -408,15 +425,25 @@ trait VLQReaderWriterSpecification extends PropSpec
     roundtrip(-134217728,   bytesFromInts(0xFF, 0xFF, 0xFF, 0x7F)) // 4 bytes
     roundtrip(-1048577,     bytesFromInts(0x81, 0x80, 0x80, 0x01)) // 4 bytes
     roundtrip(-1048576,     bytesFromInts(0xFF, 0xFF, 0x7F))
+    roundtrip(-8194,        bytesFromInts(0x83, 0x80, 0x01))
     roundtrip(-8193,        bytesFromInts(0x81, 0x80, 0x01))
     roundtrip(-8192,        bytesFromInts(0xFF, 0x7F))
+    roundtrip(-8191,        bytesFromInts(0xFD, 0x7F))
+    roundtrip(-66,          bytesFromInts(0x83, 0x01))
     roundtrip(-65,          bytesFromInts(0x81, 0x01))
     roundtrip(-64,          bytesFromInts(0x7F))
+    roundtrip(-63,          bytesFromInts(0x7D))
+    roundtrip(-1,           bytesFromInts(0x01))
     roundtrip(0,            bytesFromInts(0))
+    roundtrip(1,            bytesFromInts(0x02))
+    roundtrip(62,           bytesFromInts(0x7C))
     roundtrip(63,           bytesFromInts(0x7E))
     roundtrip(64,           bytesFromInts(0x80, 0x01))
+    roundtrip(65,           bytesFromInts(0x82, 0x01))
+    roundtrip(8190,         bytesFromInts(0xFC, 0x7F))
     roundtrip(8191,         bytesFromInts(0xFE, 0x7F))
     roundtrip(8192,         bytesFromInts(0x80, 0x80, 0x01))
+    roundtrip(8193,         bytesFromInts(0x82, 0x80, 0x01))
     roundtrip(1048575,      bytesFromInts(0xFE, 0xFF, 0x7F))
     roundtrip(1048576,      bytesFromInts(0x80, 0x80, 0x80, 0x01)) // 4 bytes
     roundtrip(134217727,    bytesFromInts(0xFE, 0xFF, 0xFF, 0x7F)) // 4 bytes
@@ -436,10 +463,13 @@ trait VLQReaderWriterSpecification extends PropSpec
     }
     an[IllegalArgumentException] should be thrownBy roundtrip(-1, bytesFromInts(0))
     roundtrip(0, bytesFromInts(0))
+    roundtrip(126, bytesFromInts(0x7E))
     roundtrip(127, bytesFromInts(0x7F))
     roundtrip(128, bytesFromInts(0x80, 0x01))
+    roundtrip(129, bytesFromInts(0x81, 0x01))
     roundtrip(16383, bytesFromInts(0xFF, 0x7F))
     roundtrip(16384, bytesFromInts(0x80, 0x80, 0x01))
+    roundtrip(16385, bytesFromInts(0x81, 0x80, 0x01))
     roundtrip(2097151, bytesFromInts(0xFF, 0xFF, 0x7F))
     roundtrip(2097152, bytesFromInts(0x80, 0x80, 0x80, 0x01)) // 4 bytes
     roundtrip(268435455, bytesFromInts(0xFF, 0xFF, 0xFF, 0x7F)) // 4 bytes
@@ -472,15 +502,25 @@ trait VLQReaderWriterSpecification extends PropSpec
     roundtrip(-134217728,          bytesFromInts(0xFF, 0xFF, 0xFF, 0x7F)) // 4 bytes
     roundtrip(-1048577,            bytesFromInts(0x81, 0x80, 0x80, 0x01)) // 4 bytes
     roundtrip(-1048576,            bytesFromInts(0xFF, 0xFF, 0x7F))
+    roundtrip(-8194,               bytesFromInts(0x83, 0x80, 0x01))
     roundtrip(-8193,               bytesFromInts(0x81, 0x80, 0x01))
     roundtrip(-8192,               bytesFromInts(0xFF, 0x7F))
+    roundtrip(-8191,               bytesFromInts(0xFD, 0x7F))
+    roundtrip(-66,                 bytesFromInts(0x83, 0x01))
     roundtrip(-65,                 bytesFromInts(0x81, 0x01))
     roundtrip(-64,                 bytesFromInts(0x7F))
+    roundtrip(-63,                 bytesFromInts(0x7D))
+    roundtrip(-1,                  bytesFromInts(0x01))
     roundtrip(0,                   bytesFromInts(0))
+    roundtrip(1,                   bytesFromInts(0x02))
+    roundtrip(62,                  bytesFromInts(0x7C))
     roundtrip(63,                  bytesFromInts(0x7E))
     roundtrip(64,                  bytesFromInts(0x80, 0x01))
+    roundtrip(65,                  bytesFromInts(0x82, 0x01))
+    roundtrip(8190,                bytesFromInts(0xFC, 0x7F))
     roundtrip(8191,                bytesFromInts(0xFE, 0x7F))
     roundtrip(8192,                bytesFromInts(0x80, 0x80, 0x01))
+    roundtrip(8193,                bytesFromInts(0x82, 0x80, 0x01))
     roundtrip(1048575,             bytesFromInts(0xFE, 0xFF, 0x7F))
     roundtrip(1048576,             bytesFromInts(0x80, 0x80, 0x80, 0x01)) // 4 bytes
     roundtrip(134217727,           bytesFromInts(0xFE, 0xFF, 0xFF, 0x7F)) // 4 bytes
@@ -508,11 +548,13 @@ trait VLQReaderWriterSpecification extends PropSpec
     }
     roundtrip(Long.MinValue, bytesFromInts(0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x01)) // 10 bytes
     roundtrip(-1, bytesFromInts(0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x01)) // 10 bytes
-    roundtrip(0, bytesFromInts(0))
+    roundtrip(126, bytesFromInts(0x7E))
     roundtrip(127, bytesFromInts(0x7F))
     roundtrip(128, bytesFromInts(0x80, 0x01))
+    roundtrip(129, bytesFromInts(0x81, 0x01))
     roundtrip(16383, bytesFromInts(0xFF, 0x7F))
-    roundtrip(16384,   bytesFromInts(0x80, 0x80, 0x01))
+    roundtrip(16384, bytesFromInts(0x80, 0x80, 0x01))
+    roundtrip(16385, bytesFromInts(0x81, 0x80, 0x01))
     roundtrip(2097151, bytesFromInts(0xFF, 0xFF, 0x7F))
     roundtrip(2097152,   bytesFromInts(0x80, 0x80, 0x80, 0x01)) // 4 bytes
     roundtrip(268435455, bytesFromInts(0xFF, 0xFF, 0xFF, 0x7F)) // 4 bytes
