@@ -14,9 +14,6 @@ resolvers ++= Seq("Sonatype Releases" at "https://oss.sonatype.org/content/repos
 )
 
 libraryDependencies ++= Seq(
-  "com.typesafe.akka" %% "akka-actor" % "2.5.+",
-  "com.typesafe.scala-logging" %% "scala-logging" % "3.+",
-  "ch.qos.logback" % "logback-classic" % "1.+",
   "org.rudogma" % "supertagged_2.12" % "1.4",
   "org.scalatest" %% "scalatest" % "3.0.3" % "test",
   "org.scalacheck" %% "scalacheck" % "1.13.+" % "test"
@@ -24,7 +21,7 @@ libraryDependencies ++= Seq(
 
 publishMavenStyle in ThisBuild := true
 
-publishArtifact in Test := false
+publishArtifact in Test := true
 
 publishTo in ThisBuild := {
   val nexus = "https://oss.sonatype.org/"
