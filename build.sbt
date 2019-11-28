@@ -5,7 +5,12 @@ organization := "org.scorexfoundation"
 
 version := "0.1.6-SNAPSHOT"
 
-scalaVersion := "2.12.8"
+scalaVersion := "2.11.12"
+
+javacOptions ++=
+    "-source" :: "1.7" ::
+    "-target" :: "1.7" ::
+    Nil
 
 resolvers ++= Seq("Sonatype Releases" at "https://oss.sonatype.org/content/repositories/releases/",
   "SonaType" at "https://oss.sonatype.org/content/groups/public",
@@ -14,7 +19,7 @@ resolvers ++= Seq("Sonatype Releases" at "https://oss.sonatype.org/content/repos
 )
 
 libraryDependencies ++= Seq(
-  "org.rudogma" % "supertagged_2.12" % "1.4",
+  "org.rudogma" % "supertagged_2.11" % "1.4",
   "com.typesafe.scala-logging" %% "scala-logging" % "3.9.2",
   "org.scalatest" %% "scalatest" % "3.0.3" % "test",
   "org.scalacheck" %% "scalacheck" % "1.13.+" % "test"
