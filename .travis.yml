@@ -2,35 +2,35 @@ sudo: true
 dist: trusty
 language: scala
 jdk:
-  - oraclejdk8
+- oraclejdk8
 branches:
   only:
-    - master
-    - /^\d\.\d+$/
+  - master
+  - "/^\\d\\.\\d+$/"
 scala:
-  - 2.12.8
+- 2.12.8
 cache:
   directories:
-    - "$HOME/.ivy2/cache"
-    - "$HOME/.sbt"
-
-# These directories are cached to S3 at the end of the build
+  - "$HOME/.ivy2/cache"
+  - "$HOME/.sbt"
 before_cache:
-  # Cleanup the cached directories to avoid unnecessary cache updates
-  - find $HOME/.ivy2/cache -name "ivydata-*.properties" -print -delete
-  - find $HOME/.sbt        -name "*.lock"               -print -delete
-
+- find $HOME/.ivy2/cache -name "ivydata-*.properties" -print -delete
+- find $HOME/.sbt        -name "*.lock"               -print -delete
 stages:
-  - test
-  - name: release
-    if: tag =~ ^v
-  - name: snapshot
-    if: (NOT tag IS present) AND (type = push)
+- test
+- name: release
+  if: tag =~ ^v
+- name: snapshot
+  if: "(NOT tag IS present) AND (type = push)"
 jobs:
   include:
-    - stage: test
-      script: sbt coverage test && sbt coverageReport coveralls
-    - stage: release
-      script: sbt publishSigned sonatypeBundleRelease
-    - stage: snapshot
-      script: sbt publish
+  - stage: test
+    script: sbt coverage test && sbt coverageReport coveralls
+  - stage: release
+    script: sbt publishSigned sonatypeBundleRelease
+  - stage: snapshot
+    script: sbt publish
+env:
+  global:
+  - secure: p6Gfr7sv6Jvh9XeC2Myi9CgaZtMXsaTQL4i5YUmkRdc/w+/CsmDJcZg/zT9qOlCwJ8g2SQ7Krn8LdzRocY1m4NZjg0uwu1ocv5ftk2lYUHmiTxbth0dSmHiocKbQGjgTh3GxENAXYJ42a2DG1eTcGqi/9ANqMAqi9ZBn9u8SmZdA7shgiUcZnml5Cu3UMbo6nwVaePrT93EZ8QPO3X9sFjIbrd14HGKa6ZUyjSLddodV36Y6IvMwKld5FNdkekvkos18kBGnWkkN2B8zOXxmC4y5lGNpsVBJdx2V+jaEXtpdwyrOSEHSUklAhabYCLt7fQptofbeVuN93i8eePXReEvEjSVFUkK4LB1qhIp2s4etYaoWmCHnTJdHJmY6Z6+eZ2y3cLkRp+luUGBx7WQ6tnekezxtYRy98ZIIJV+LDY8bgL8/vLaIWZmonI3fxg47wtGk3dW9PEN/Qpq2k9p9KwH5lQZcMobCtLVIyLNiAvykbB/RV19GPCz7rnc8Qw7XNZbVMs+nGVwiKMQ9gq3d5YqzNDUCiDTW5GNdVpk5/GJYZWLg9t/jJfCayjQPVwov+oXQYzyn6iY3ZW+rHCiH/AVvO0C0EyNp/MZEnh/1ggArX0xL9a0mRdkDmEa00+GrjQDFsrAgSoBH3h94Y+pZlxANrB3WwM2O76IC/sLqEu0=
+  - secure: lotYaGiT21lat+D921NQyLBwTp3BNmETTlGa8iM0gkAZy+v6qP2diB3oI6baPzeBwXZ6UJ7J2RuDC50vMkc9ffmoJmrh444WqJ7y6la1FMsKKuxGDmsILo+kyctiCXvgsTI8d2lCzngMr84E5kz2ENcXiFEvUIUctqKy6SQEsA3k+MO5xAO8TF0hQVWhPMpLwrkhq4Ig/bbzD/x08dcWPlS6MCuA5ujC4CqpNAffBQVWDjL1G5wc2XMFYNNqyXq4/87r2Su0GiD/tWd9uu+RHHSxQACGKvLJjdqUICalO8lSGtwLQly1gcfbNjL4rYw7sUhkFu/XFKizvgDtr5VzgdGzIsrxAh71xkeecnR7IhR6brmBRKj5uEoUMmnYFoutlIGuIa6HxS2/P//eGSPhbrX/nc7VDEJ1a8q2bMLZHJhUXMSKA5zy5MtB+XRkuoywc1ee5orQCUeKI27jY+D6aQ9IQcvx1TobjrO2xeMewQKwRY/rLxX9YvIZVBFGl4pSOCsI9FxqJJfRI8PwodmRbBj6z14uvz3HjITza83UtDF5r4F2ycpZDZo44yVqcSfnsbScaS0z2WWppDW7+U+nB8QiTbLZ/pXEZqQs76stcc4OajSKOfRsapbU4W1V66/3eVBhCB/VBMukuUSLQp4HBZjljSu4+0Mocx0x8sHvt9s=
