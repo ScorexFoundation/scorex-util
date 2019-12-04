@@ -3,10 +3,6 @@ dist: trusty
 language: scala
 jdk:
 - oraclejdk8
-branches:
-  only:
-  - master
-  - "/^\\d\\.\\d+$/"
 scala:
 - 2.12.8
 cache:
