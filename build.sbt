@@ -21,7 +21,7 @@ libraryDependencies ++= Seq(
 )
 
 publishMavenStyle in ThisBuild := true
-
+publishTo := sonatypePublishToBundle.value
 publishArtifact in Test := true
 
 credentials ++= (for {
