@@ -5,7 +5,10 @@ description := "Common tools for scorex projects"
 
 organization := "org.scorexfoundation"
 
-scalaVersion := "2.12.8"
+lazy val scala212 = "2.12.10"
+lazy val scala211 = "2.11.12"
+crossScalaVersions := Seq(scala212, scala211)
+scalaVersion := scala212
 
 resolvers ++= Seq("Sonatype Releases" at "https://oss.sonatype.org/content/repositories/releases/",
   "SonaType" at "https://oss.sonatype.org/content/groups/public",
@@ -14,7 +17,7 @@ resolvers ++= Seq("Sonatype Releases" at "https://oss.sonatype.org/content/repos
 )
 
 libraryDependencies ++= Seq(
-  "org.rudogma" % "supertagged_2.12" % "1.4",
+  "org.rudogma" %% "supertagged" % "1.4",
   "com.typesafe.scala-logging" %% "scala-logging" % "3.9.2",
   "org.scalatest" %% "scalatest" % "3.0.3" % "test",
   "org.scalacheck" %% "scalacheck" % "1.13.+" % "test"

@@ -3,8 +3,6 @@ dist: trusty
 language: scala
 jdk:
 - oraclejdk8
-scala:
-- 2.12.8
 cache:
   directories:
   - "$HOME/.ivy2/cache"
@@ -21,13 +19,13 @@ stages:
 jobs:
   include:
   - stage: test
-    script: sbt coverage test && sbt coverageReport coveralls
+    script: sbt coverage +test && sbt coverageReport coveralls
   - stage: release
     script: openssl aes-256-cbc -K $encrypted_dceea7e6c44e_key -iv $encrypted_dceea7e6c44e_iv
       -in ci/secring.asc.enc -out ci/secring.asc -d && gpg --import ci/secring.asc
-      && sbt publishSigned sonatypeBundleRelease
+      && sbt +publishSigned sonatypeBundleRelease
   - stage: snapshot
-    script: sbt publish
+    script: sbt +publish
 env:
   global:
   - secure: p6Gfr7sv6Jvh9XeC2Myi9CgaZtMXsaTQL4i5YUmkRdc/w+/CsmDJcZg/zT9qOlCwJ8g2SQ7Krn8LdzRocY1m4NZjg0uwu1ocv5ftk2lYUHmiTxbth0dSmHiocKbQGjgTh3GxENAXYJ42a2DG1eTcGqi/9ANqMAqi9ZBn9u8SmZdA7shgiUcZnml5Cu3UMbo6nwVaePrT93EZ8QPO3X9sFjIbrd14HGKa6ZUyjSLddodV36Y6IvMwKld5FNdkekvkos18kBGnWkkN2B8zOXxmC4y5lGNpsVBJdx2V+jaEXtpdwyrOSEHSUklAhabYCLt7fQptofbeVuN93i8eePXReEvEjSVFUkK4LB1qhIp2s4etYaoWmCHnTJdHJmY6Z6+eZ2y3cLkRp+luUGBx7WQ6tnekezxtYRy98ZIIJV+LDY8bgL8/vLaIWZmonI3fxg47wtGk3dW9PEN/Qpq2k9p9KwH5lQZcMobCtLVIyLNiAvykbB/RV19GPCz7rnc8Qw7XNZbVMs+nGVwiKMQ9gq3d5YqzNDUCiDTW5GNdVpk5/GJYZWLg9t/jJfCayjQPVwov+oXQYzyn6iY3ZW+rHCiH/AVvO0C0EyNp/MZEnh/1ggArX0xL9a0mRdkDmEa00+GrjQDFsrAgSoBH3h94Y+pZlxANrB3WwM2O76IC/sLqEu0=
