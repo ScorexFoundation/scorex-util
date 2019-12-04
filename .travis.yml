@@ -26,7 +26,7 @@ jobs:
   - stage: release
     script: openssl aes-256-cbc -K $encrypted_dceea7e6c44e_key -iv $encrypted_dceea7e6c44e_iv
       -in ci/secring.asc.enc -out ci/secring.asc -d && gpg --import ci/secring.asc
-      && sbt +publishSigned +sonatypeBundleRelease
+      && sbt +publishSigned sonatypeBundleRelease
   - stage: snapshot
     script: sbt +publish
 env:
