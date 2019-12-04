@@ -36,10 +36,6 @@ pomIncludeRepository in ThisBuild := { _ => false }
 licenses := Seq("CC0" -> url("https://creativecommons.org/publicdomain/zero/1.0/legalcode"))
 homepage := Some(url("https://github.com/ScorexFoundation/scorex-util"))
 pomExtra :=
-  <scm>
-    <url>git@github.com:ScorexFoundation/scorex-util.git</url>
-    <connection>scm:git:git@github.com:ScorexFoundation/scorex-util.git</connection>
-  </scm>
     <developers>
       <developer>
         <id>kushti</id>
