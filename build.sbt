@@ -10,6 +10,11 @@ lazy val scala211 = "2.11.12"
 crossScalaVersions := Seq(scala212, scala211)
 scalaVersion := scala212
 
+javacOptions ++=
+  "-source" :: "1.7" ::
+    "-target" :: "1.7" ::
+    Nil
+
 resolvers ++= Seq("Sonatype Releases" at "https://oss.sonatype.org/content/repositories/releases/",
   "SonaType" at "https://oss.sonatype.org/content/groups/public",
   "Typesafe maven releases" at "http://repo.typesafe.com/typesafe/maven-releases/",
