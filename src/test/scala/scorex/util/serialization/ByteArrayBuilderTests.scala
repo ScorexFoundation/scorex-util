@@ -1,10 +1,12 @@
 package scorex.util.serialization
 
-import org.scalatest.prop.PropertyChecks
-import org.scalatest.{Matchers, PropSpec}
+
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.propspec.AnyPropSpec
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import scorex.util.ByteArrayBuilder
 
-class ByteArrayBuilderTests extends PropSpec with PropertyChecks with Matchers {
+class ByteArrayBuilderTests extends AnyPropSpec with ScalaCheckPropertyChecks with Matchers {
 
   property("Append basic types") {
     val b = new ByteArrayBuilder(1)

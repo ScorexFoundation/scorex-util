@@ -1,14 +1,16 @@
 package scorex.util.serialization
 
 import org.scalacheck.{Arbitrary, Gen}
-import org.scalatest.prop.PropertyChecks
-import org.scalatest.{Assertion, Matchers, PropSpec}
+import org.scalatest.Assertion
+import org.scalatest.propspec.AnyPropSpec
+import org.scalatest.matchers.should.Matchers
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import scorex.util.TestHelpers._
 import scorex.util.Generators
 
-trait VLQReaderWriterSpecification extends PropSpec
+trait VLQReaderWriterSpecification extends AnyPropSpec
   with Generators
-  with PropertyChecks
+  with ScalaCheckPropertyChecks
   with Matchers {
 
   def byteBufReader(bytes: Array[Byte]): VLQReader

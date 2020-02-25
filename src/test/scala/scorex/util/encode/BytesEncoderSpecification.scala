@@ -1,11 +1,13 @@
 package scorex.util.encode
 
-import org.scalatest.prop.{GeneratorDrivenPropertyChecks, PropertyChecks}
-import org.scalatest.{Matchers, PropSpec}
+import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.propspec.AnyPropSpec
 
-trait BytesEncoderSpecification extends PropSpec
-  with PropertyChecks
-  with GeneratorDrivenPropertyChecks
+trait BytesEncoderSpecification extends AnyPropSpec
+  with ScalaCheckPropertyChecks
+  with ScalaCheckDrivenPropertyChecks
   with Matchers {
 
   val encoder: BytesEncoder

@@ -21,10 +21,10 @@ object Base58 extends BytesEncoder {
     if (bi > 0) {
       while (bi >= Base) {
         val (newBi, mod) = bi /% Base
-        s.insert(0, Alphabet.charAt(mod.intValue()))
+        s.insert(0, Alphabet.charAt(mod.intValue))
         bi = newBi
       }
-      s.insert(0, Alphabet.charAt(bi.intValue()))
+      s.insert(0, Alphabet.charAt(bi.intValue))
     }
     // Convert leading zeros too.
     input.takeWhile(_ == 0).foldLeft(s) { case (ss, _) =>

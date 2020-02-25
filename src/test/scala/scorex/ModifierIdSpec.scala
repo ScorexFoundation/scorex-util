@@ -1,9 +1,11 @@
 package scorex
 
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.flatspec.AnyFlatSpec
 import scorex.util._
-import org.scalatest.{FlatSpec, Matchers}
 
-class ModifierIdSpec extends FlatSpec with Matchers {
+
+class ModifierIdSpec extends AnyFlatSpec with Matchers {
 
   "ModifierId" should "convert to/from bytes" in {
     val bytes = Array.fill[Byte](32)(1)
