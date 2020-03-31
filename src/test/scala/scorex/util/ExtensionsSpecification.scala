@@ -1,12 +1,13 @@
 package scorex.util
 
-import org.scalatest.{Matchers, PropSpec}
-import org.scalatest.prop.{GeneratorDrivenPropertyChecks, PropertyChecks}
+import org.scalatest.matchers.should.Matchers
+import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 import Extensions._
 import org.scalacheck.Gen
+import org.scalatest.propspec.AnyPropSpec
 
-class ExtensionsSpecification extends PropSpec
-  with GeneratorDrivenPropertyChecks
+class ExtensionsSpecification extends AnyPropSpec
+  with ScalaCheckDrivenPropertyChecks
   with Matchers {
 
   property("ByteOps.toUByte") {
@@ -103,7 +104,7 @@ class ExtensionsSpecification extends PropSpec
 
   property("TraversableOps.cast") {
     List(1,2,3,4).cast[Int] shouldBe List(1,2,3,4)
-    an[IllegalArgumentException] should be thrownBy List(1,"2",3,4).cast
+    an[IllegalArgumentException] should be thrownBy List(1,"2",3,4).cast[Int]
   }
 
 }

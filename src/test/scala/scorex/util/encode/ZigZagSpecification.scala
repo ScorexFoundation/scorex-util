@@ -1,14 +1,15 @@
 package scorex.util.encode
 
 import org.scalacheck.Gen
-import org.scalatest.prop.PropertyChecks
-import org.scalatest.{Matchers, PropSpec}
+import org.scalatest.propspec.AnyPropSpec
+import org.scalatest.matchers.should.Matchers
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import scorex.util.Generators
 import scorex.util.encode.ZigZagEncoder._
 
-class ZigZagSpecification extends PropSpec
+class ZigZagSpecification extends AnyPropSpec
   with Generators
-  with PropertyChecks
+  with ScalaCheckPropertyChecks
   with Matchers {
 
   property("ZigZag encoding format") {

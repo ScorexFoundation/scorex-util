@@ -7,12 +7,13 @@ organization := "org.scorexfoundation"
 
 lazy val scala212 = "2.12.10"
 lazy val scala211 = "2.11.12"
-crossScalaVersions := Seq(scala212, scala211)
+lazy val scala213 = "2.13.1"
+crossScalaVersions := Seq(scala212, scala211, scala213)
 scalaVersion := scala212
 
 javacOptions ++=
-  "-source" :: "1.7" ::
-    "-target" :: "1.7" ::
+  "-source" :: "1.8" ::
+    "-target" :: "1.8" ::
     Nil
 
 resolvers ++= Seq("Sonatype Releases" at "https://oss.sonatype.org/content/repositories/releases/",
@@ -22,10 +23,13 @@ resolvers ++= Seq("Sonatype Releases" at "https://oss.sonatype.org/content/repos
 )
 
 libraryDependencies ++= Seq(
-  "org.rudogma" %% "supertagged" % "1.4",
+  "org.rudogma" %% "supertagged" % "1.5",
   "com.typesafe.scala-logging" %% "scala-logging" % "3.9.2",
-  "org.scalatest" %% "scalatest" % "3.0.3" % "test",
-  "org.scalacheck" %% "scalacheck" % "1.13.+" % "test"
+  "org.scalatest" %% "scalatest" % "3.1.1" % Test,
+  "org.scalacheck" %% "scalacheck" % "1.14.+" % Test,
+  // https://mvnrepository.com/artifact/org.scalatestplus/scalatestplus-scalacheck
+   "org.scalatestplus" %% "scalatestplus-scalacheck" % "3.1.0.0-RC2" % Test
+
 )
 
 publishMavenStyle in ThisBuild := true
@@ -44,13 +48,13 @@ pomIncludeRepository in ThisBuild := { _ => false }
 licenses := Seq("CC0" -> url("https://creativecommons.org/publicdomain/zero/1.0/legalcode"))
 homepage := Some(url("https://github.com/ScorexFoundation/scorex-util"))
 pomExtra :=
-    <developers>
-      <developer>
-        <id>kushti</id>
-        <name>Alexander Chepurnoy</name>
-        <url>http://chepurnoy.org/</url>
-      </developer>
-    </developers>
+  <developers>
+    <developer>
+      <id>kushti</id>
+      <name>Alexander Chepurnoy</name>
+      <url>http://chepurnoy.org/</url>
+    </developer>
+  </developers>
 
 enablePlugins(GitVersioning)
 
@@ -89,3 +93,4 @@ pgpPublicRing := file("ci/pubring.asc")
 pgpSecretRing := file("ci/secring.asc")
 pgpPassphrase := sys.env.get("PGP_PASSPHRASE").map(_.toArray)
 usePgpKeyHex("9D73AA38C08FD6AE5A51D3C11E4BF6F443599431")
+
