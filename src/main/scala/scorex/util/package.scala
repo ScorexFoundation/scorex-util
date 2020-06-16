@@ -53,8 +53,18 @@ package object util {
   def stringToId(s: String): ModifierId = new ModifierId(Base16.decode(s).get)
 
   implicit val modifierOrdering : Ordering[ModifierId] = new Ordering[ModifierId] {
+    // TODO optimize: use java.util.Arrays.compare after JDK8 support is dropped
     def compare(a: ModifierId, b: ModifierId): Int = {
-      java.util.Arrays.compare(a.hashBytes, b.hashBytes)
+      val len = math.min(a.hashBytes.length, b.hashBytes.length)
+      var i = 0
+      while (i < len) {
+        val diff = (a.hashBytes(i) & 0xFF) - (b.hashBytes(i) & 0xFF)
+        if (diff != 0) {
+          return diff
+        }
+        i += 1
+      }
+      a.hashBytes.length - len
   	}
   }
 
