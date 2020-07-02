@@ -4,8 +4,7 @@ import scorex.util.encode.Base16
 
 package object util {
 
-  /** Represents hash based id of a modifier (see [Content-addressable
-    * storage](https://en.wikipedia.org/wiki/Content-addressable_storage)). `ModifierId` is used extensively
+  /** Represents hash based id of a modifier. `ModifierId` is used extensively
     * all over the code base.
     * In most cases `ModifierId` is used as equality safe replacement of the original `Array[Byte]` 32-bytes
     * hash which is stored in blockchain.
@@ -27,10 +26,10 @@ package object util {
     */
   case class ModifierId(hashBytes: Array[Byte]) {
     // This is much more efficient than hashing whole array or String.
-    // We can use the first 4 bytes and convert them into Int.
+    // We can use the last 4 bytes and convert them into Int.
     override def hashCode: Int = {
       val bytes = hashBytes
-      hashFromBytes(bytes(0), bytes(1), bytes(2), bytes(3))
+      hashFromBytes(bytes(28), bytes(29), bytes(30), bytes(31))
     }
 
     override def equals(other: Any): Boolean = (this eq other.asInstanceOf[AnyRef]) ||
@@ -53,7 +52,9 @@ package object util {
   def stringToId(s: String): ModifierId = new ModifierId(Base16.decode(s).get)
 
   implicit val modifierOrdering : Ordering[ModifierId] = new Ordering[ModifierId] {
-    // TODO optimize: use java.util.Arrays.compare after JDK8 support is dropped
+    // We can not use java.util.Arrays.compare because we have to provide compatibility with
+	// comparison of Base16 encoded strings representing this byte array.
+	// So we have to treate bytes as unsigned
     def compare(a: ModifierId, b: ModifierId): Int = {
       val len = math.min(a.hashBytes.length, b.hashBytes.length)
       var i = 0
