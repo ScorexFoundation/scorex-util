@@ -17,9 +17,11 @@ class ModifierIdSpec extends AnyFlatSpec with Matchers {
 
   "ModifierId" should "equals or not equal if and only if the corresponding Base16 strings are equal" in {
     val str1 = "0001020304050607080910111213141516171819F0F1F2F3F4F5F6F7F8F900FF"
-    val str2 = "0001020304050607080910111213141516171819F0F1F2F3F4F5F6F7F8F9007F"
+    val str2 = "0001020304050607080910111213141516171819F0F1F2F3F4F5F6F7F8F900FF"
+    val str3 = "0001020304050607080910111213141516171819F0F1F2F3F4F5F6F7F8F9007F"
 	ModifierId(str1) shouldEqual ModifierId(str1)
-	ModifierId(str1) should not equal ModifierId(str2)
+	ModifierId(str1) shouldEqual ModifierId(str2)
+	ModifierId(str2) should not equal ModifierId(str3)
   }
 
   "ModifierId" should "provide the same ordering as Base16 strings" in {

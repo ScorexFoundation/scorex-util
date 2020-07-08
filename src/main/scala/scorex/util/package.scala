@@ -29,7 +29,10 @@ package object util {
     // We can use the last 4 bytes and convert them into Int.
     override def hashCode: Int = {
       val bytes = hashBytes
-      hashFromBytes(bytes(28), bytes(29), bytes(30), bytes(31))
+	  if (bytes.size == 32)
+        hashFromBytes(bytes(28), bytes(29), bytes(30), bytes(31))
+	  else
+	    java.util.Arrays.hashCode(bytes)
     }
 
     override def equals(other: Any): Boolean = (this eq other.asInstanceOf[AnyRef]) ||
