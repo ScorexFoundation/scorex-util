@@ -33,10 +33,11 @@ object Base16 extends BytesEncoder {
   }
 
   def decode(input: String): Try[Array[Byte]] = {
-    var (isError, errorMsg) = if (input.length % 2 == 0) {
-      (false, "")
-    } else {
-      (true, s"invalid length ${input.length} of Hex data")
+    var isError = false
+    var errorMsg = ""
+    if (input.length % 2 != 0) {
+      isError = true
+      errorMsg = s"invalid length ${input.length} of Hex data"
     }
 
     val out = Array.ofDim[Byte](input.length / 2)

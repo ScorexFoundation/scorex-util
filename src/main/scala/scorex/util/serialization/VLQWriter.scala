@@ -104,7 +104,7 @@ trait VLQWriter extends Writer {
       if ((value & ~0x7FL) == 0) {
         buffer(position) = value.asInstanceOf[Byte]
         position += 1
-        putBytes(util.Arrays.copyOf(buffer, position))
+        putBytes(buffer, 0, position)
         return this
       } else {
         buffer(position) = ((value.asInstanceOf[Int] & 0x7F) | 0x80).toByte

@@ -33,6 +33,11 @@ class VLQByteBufferWriter(b: ByteArrayBuilder) extends Writer with VLQWriter {
     this
   }
 
+  @inline override def putBytes(xs: Array[Byte], offset: Int, length: Int): this.type = {
+    b.append(xs, offset, length)
+    this
+  }
+
   @inline override def length(): Int = b.length()
 
   @inline override def result(): ByteArrayBuilder = b
