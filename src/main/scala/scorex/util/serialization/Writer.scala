@@ -118,6 +118,14 @@ trait Writer {
   def putBytes(xs: Array[Byte]): this.type
 
   /**
+    * Encode a slice of array of bytes.
+    * @param xs an array to take bytes from
+    * @param offset first byte of the slice
+    * @param length of the slice (number of bytes)
+    */
+  def putBytes(xs: Array[Byte], offset: Int, length: Int): this.type
+
+  /**
     * Encode an array of boolean values as a bit array
     *
     * @param xs array of boolean values

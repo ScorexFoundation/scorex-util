@@ -104,7 +104,7 @@ trait VLQWriter extends Writer {
       if ((value & ~0x7FL) == 0) {
         buffer(position) = value.asInstanceOf[Byte]
         position += 1
-        putBytes(util.Arrays.copyOf(buffer, position))
+        putBytes(buffer, 0, position)
         return this
       } else {
         buffer(position) = ((value.asInstanceOf[Int] & 0x7F) | 0x80).toByte
@@ -116,10 +116,19 @@ trait VLQWriter extends Writer {
     // see https://rosettacode.org/wiki/Variable-length_quantity for implementations in other languages
   }
 
+  // TODO optimize: it is possible to further significantly optimize this method
+  // by directly packing bits into bytes and putting bytes into the writer.
+  // this can be done without any additional memory garbage (BitSet, toByteArray, copyOf).
   @inline override def putBits(xs: Array[Boolean]): this.type = {
     if (xs.isEmpty) return this
-    val bitSet = new util.BitSet(xs.length)
-    xs.zipWithIndex.foreach { case (bool, i) => bitSet.set(i, bool)}
+    val len = xs.length
+    val bitSet = new util.BitSet(len)
+    var i = 0
+    while (i < len) {
+      val bool = xs(i)
+      bitSet.set(i, bool)
+      i += 1
+    }
     // pad the byte array to fix the "no bit was set" behaviour
     // see https://stackoverflow.com/questions/11209600/how-do-i-convert-a-bitset-initialized-with-false-in-a-byte-containing-0-in-java
     val bytes = util.Arrays.copyOf(bitSet.toByteArray, (xs.length + 7) / 8)
