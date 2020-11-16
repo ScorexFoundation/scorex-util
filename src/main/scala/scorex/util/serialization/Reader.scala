@@ -1,7 +1,7 @@
 package scorex.util.serialization
 
 
-trait Reader {
+abstract class Reader {
 
   /**
     * Type of encoded data

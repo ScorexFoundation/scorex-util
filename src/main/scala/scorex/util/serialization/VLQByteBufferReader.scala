@@ -22,6 +22,7 @@ class VLQByteBufferReader(buf: ByteBuffer) extends VLQReader {
   @inline override def getByte(): Byte = buf.get
 
   @inline override def getBytes(size: Int): Array[Byte] = {
+    require(size <= remaining, s"Not enough bytes in the buffer: $size")
     val res = new Array[Byte](size)
     buf.get(res)
     res
