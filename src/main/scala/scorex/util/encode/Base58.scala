@@ -35,7 +35,7 @@ object Base58 extends BytesEncoder {
   override def decode(input: String): Try[Array[Byte]] = Try {
     val decoded = decodeToBigInteger(input)
 
-    val bytes: Array[Byte] = if (decoded == BigInt(0)) Array.empty else decoded.toByteArray
+    val bytes: Array[Byte] = if (decoded == BigInt(0)) Array.emptyByteArray else decoded.toByteArray
     // We may have got one more byte than we wanted, if the high bit of the next-to-last byte was not zero.
     // This  is because BigIntegers are represented with twos-compliment notation,
     // thus if the high bit of the last  byte happens to be 1 another 8 zero bits will be added to

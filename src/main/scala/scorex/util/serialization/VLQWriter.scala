@@ -131,7 +131,7 @@ trait VLQWriter extends Writer {
     }
     // pad the byte array to fix the "no bit was set" behaviour
     // see https://stackoverflow.com/questions/11209600/how-do-i-convert-a-bitset-initialized-with-false-in-a-byte-containing-0-in-java
-    val bytes = util.Arrays.copyOf(bitSet.toByteArray, (xs.length + 7) / 8)
+    val bytes = util.Arrays.copyOf(bitSet.toByteArray, (xs.length + 7) >> 3)
     putBytes(bytes)
     this
   }

@@ -4,7 +4,7 @@ import java.nio.ByteBuffer
 
 import scorex.util.ByteArrayBuilder
 
-class VQLByteBufferReaderWriterSpecification extends VLQReaderWriterSpecification {
+class VLQByteBufferReaderWriterSpecification extends VLQReaderWriterSpecification {
 
   override def byteBufReader(bytes: Array[Byte]): VLQReader = {
     val buf = ByteBuffer.wrap(bytes)

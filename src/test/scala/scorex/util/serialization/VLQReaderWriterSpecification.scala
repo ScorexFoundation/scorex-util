@@ -260,6 +260,36 @@ trait VLQReaderWriterSpecification extends AnyPropSpec
     checkFail(Int.MaxValue)
   }
 
+  property("getBytes size check") {
+    val bytes = Array[Byte](1, 2, 3)
+
+    { // successful case
+      val r = byteBufReader(bytes)
+      r.getBytes(3) shouldBe bytes
+    }
+    
+    { // successful case 2
+      val r = byteBufReader(bytes)
+      r.position = 2
+      r.getBytes(1) shouldBe bytes.slice(2, 3)
+    }
+
+    { // failure case
+      val r = byteBufReader(bytes)
+      an[IllegalArgumentException] should be thrownBy {
+        r.getBytes(4)
+      }
+    }
+
+    { // failure case 2
+      val r = byteBufReader(bytes)
+      r.position = 2
+      an[IllegalArgumentException] should be thrownBy {
+        r.getBytes(2)
+      }
+    }
+  }
+
   property("getUInt range check assertion") {
     def check(in: Long): Unit =
       byteBufReader(byteArrayWriter().putULong(in).toBytes).getUInt() shouldBe in

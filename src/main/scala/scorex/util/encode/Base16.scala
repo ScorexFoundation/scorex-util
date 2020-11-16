@@ -21,6 +21,7 @@ object Base16 extends BytesEncoder {
   }
 
   def encode(input: Array[Byte]): String = {
+    if (input.length == 0) return ""  // avoid allocation of empty array and new String instance
     val buf = new Array[Char](input.length * 2)
     var j = 0
     while (j < input.length) {

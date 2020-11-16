@@ -2,7 +2,7 @@ package scorex.util.serialization
 
 import scala.util.Try
 
-trait Serializer[TFamily, T <: TFamily, R <: Reader, W <: Writer] {
+abstract class Serializer[TFamily, T <: TFamily, R <: Reader, W <: Writer] {
 
   def serialize(obj: T, w: W): Unit
 

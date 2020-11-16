@@ -1,6 +1,6 @@
 package scorex.util.serialization
 
-trait Writer {
+abstract class Writer {
 
   /**
     * Type of encoded data

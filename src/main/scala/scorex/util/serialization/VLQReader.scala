@@ -89,8 +89,8 @@ trait VLQReader extends Reader {
   }
 
   @inline override def getBits(size: Int): Array[Boolean] = {
-    if (size == 0) return Array[Boolean]()
-    val bitSet = util.BitSet.valueOf(getBytes((size + 7) / 8))
+    if (size == 0) return Array.emptyBooleanArray
+    val bitSet = util.BitSet.valueOf(getBytes((size + 7) >> 3))
     val boolArray = new Array[Boolean](size)
     var i = 0
     while (i < size) {
