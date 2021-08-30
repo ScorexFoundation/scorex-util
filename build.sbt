@@ -65,7 +65,7 @@ dynverSeparator in ThisBuild := "-"
 // PGP key for signing a release build published to sonatype
 // signing is done by sbt-pgp plugin
 // how to generate a key - https://central.sonatype.org/pages/working-with-pgp-signatures.html
-// how to export a key and use it with Travis - https://docs.scala-lang.org/overviews/contributors/index.html#export-your-pgp-key-pair
+// how to export a key see ci/import_gpg.sh
 pgpPublicRing := file("ci/pubring.asc")
 pgpSecretRing := file("ci/secring.asc")
 pgpPassphrase := sys.env.get("PGP_PASSPHRASE").map(_.toArray)
