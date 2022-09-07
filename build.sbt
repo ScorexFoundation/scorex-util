@@ -1,4 +1,3 @@
-import scala.util.Try
 
 name := "scorex-util"
 description := "Common tools for scorex projects"
@@ -25,7 +24,6 @@ resolvers ++= Seq("Sonatype Releases" at "https://oss.sonatype.org/content/repos
 
 libraryDependencies ++= Seq(
   "org.rudogma" %% "supertagged" % "1.5",
-  "com.typesafe.scala-logging" %% "scala-logging" % "3.9.2",
   "org.scalatest" %% "scalatest" % "3.1.1" % Test,
   "org.scalacheck" %% "scalacheck" % "1.14.+" % Test,
   // https://mvnrepository.com/artifact/org.scalatestplus/scalatestplus-scalacheck
