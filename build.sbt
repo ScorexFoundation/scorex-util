@@ -5,9 +5,10 @@ description := "Common tools for scorex projects"
 
 organization := "org.scorexfoundation"
 
-lazy val scala212 = "2.12.10"
+lazy val scala213 = "2.13.8"
+lazy val scala212 = "2.12.15"
 lazy val scala211 = "2.11.12"
-lazy val scala213 = "2.13.1"
+
 crossScalaVersions := Seq(scala212, scala211, scala213)
 scalaVersion := scala212
 
@@ -18,7 +19,7 @@ javacOptions ++=
 
 resolvers ++= Seq("Sonatype Releases" at "https://oss.sonatype.org/content/repositories/releases/",
   "SonaType" at "https://oss.sonatype.org/content/groups/public",
-  "Typesafe maven releases" at "http://repo.typesafe.com/typesafe/maven-releases/",
+  "Typesafe maven releases" at "https://repo.typesafe.com/typesafe/maven-releases/",
   "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"
 )
 
@@ -53,6 +54,11 @@ pomExtra :=
       <id>kushti</id>
       <name>Alexander Chepurnoy</name>
       <url>http://chepurnoy.org/</url>
+    </developer>
+    <developer>
+      <id>aslesarenko</id>
+      <name>Alexander Slesarenko</name>
+      <url>https://github.com/aslesarenko/</url>
     </developer>
   </developers>
 
