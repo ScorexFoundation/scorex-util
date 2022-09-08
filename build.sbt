@@ -8,7 +8,7 @@ lazy val scala213 = "2.13.8"
 lazy val scala212 = "2.12.15"
 lazy val scala211 = "2.11.12"
 
-crossScalaVersions := Seq(scala212, scala211, scala213)
+crossScalaVersions := Seq(scala211, scala212, scala213)
 scalaVersion := scala212
 
 javacOptions ++=
@@ -26,10 +26,29 @@ libraryDependencies ++= Seq(
   "org.rudogma" %% "supertagged" % "2.0-RC2",
   "org.scalatest" %% "scalatest" % "3.1.1" % Test,
   "org.scalacheck" %% "scalacheck" % "1.14.+" % Test,
-  // https://mvnrepository.com/artifact/org.scalatestplus/scalatestplus-scalacheck
-   "org.scalatestplus" %% "scalatestplus-scalacheck" % "3.1.0.0-RC2" % Test
-
+  "org.scalatestplus" %% "scalatestplus-scalacheck" % "3.1.0.0-RC2" % Test
 )
+
+//lazy val core = crossProject(JSPlatform, JVMPlatform)
+//    .in(file("."))
+//    .settings(moduleName := "debox")
+//    .settings(deboxSettings)
+//    .jvmSettings(
+//      libraryDependencies ++= Seq(
+//        "org.typelevel" %%% "spire-macros" % "0.17.0-M1" // Version published for Scala 2.11-2.13
+//      ),
+//      scalaVersion := scala213,
+//      crossScalaVersions := Seq(scala211, scala212, scala213),
+//    )
+//    .jsSettings(
+//      scalaVersion := scala213,
+//      crossScalaVersions := Seq(scala213),
+//      libraryDependencies ++= Seq(
+//        "org.typelevel" %%% "spire-macros" % "0.17.0"  // Version supporting Scala.js 1.x 2.13, 3.x
+//      ),
+//      parallelExecution in Test := false
+//    )
+
 
 publishMavenStyle in ThisBuild := true
 publishTo := sonatypePublishToBundle.value
