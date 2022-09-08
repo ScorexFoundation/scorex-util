@@ -8,7 +8,7 @@ lazy val scalac: Seq[String] = Seq(
   "-language:higherKinds",             // Allow higher-kinded types
   "-language:implicitConversions",     // Allow definition of implicit functions called views
   "-unchecked",                        // Enable additional warnings where generated code depends on assumptions.
-  "-Xfatal-warnings",                  // Fail the compilation if there are any warnings.
+//  "-Xfatal-warnings",                  // Fail the compilation if there are any warnings.
   // "-Ypartial-unification",             // Enable partial unification in type constructor inference
   "-Ywarn-dead-code",                  // Warn when dead code is identified.
   "-Ywarn-numeric-widen"              // Warn when numerics are widened.
