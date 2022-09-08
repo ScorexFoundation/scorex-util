@@ -10,12 +10,12 @@ object Base16 extends BytesEncoder {
   private val hexArray = "0123456789abcdef".toCharArray
 
   private val hexIndex: Array[Byte] = {
-     var index = Array.fill[Byte](128)(0xff.toByte)
+     val index = Array.fill[Byte](128)(0xff.toByte)
      hexArray.zipWithIndex.foreach { case (c, i) =>
-        index(c) = i.toByte
+        index(c.toInt) = i.toByte
      }
      "abcdef".toCharArray.foreach{ c =>
-       index(c.toUpper) = index(c)
+       index(c.toUpper.toInt) = index(c.toInt)
      }
     index
   }
@@ -47,8 +47,8 @@ object Base16 extends BytesEncoder {
       val c1 = input(j)
       val c2 = input(j + 1)
       if (c1 > 0 && c1 < 127 && c2 > 0 && c2 < 127) {
-        val b1 = hexIndex(c1)
-        val b2 = hexIndex(c2)
+        val b1 = hexIndex(c1.toInt)
+        val b2 = hexIndex(c2.toInt)
         if ((b1 | b2) < 0) {
           isError = true
           errorMsg = "invalid characters encountered in Hex data"

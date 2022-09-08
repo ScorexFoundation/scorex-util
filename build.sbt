@@ -1,8 +1,97 @@
 
-name := "scorex-util"
-description := "Common tools for scorex projects"
+lazy val scalac: Seq[String] = Seq(
+  "-deprecation",                      // Emit warning and location for usages of deprecated APIs.
+  "-encoding", "utf-8",                // Specify character encoding used by source files.
+  "-explaintypes",                     // Explain type errors in more detail.
+  "-feature",                          // Emit warning and location for usages of features that should be imported explicitly.
+  "-language:experimental.macros",     // Allow macro definition (besides implementation and application)
+  "-language:higherKinds",             // Allow higher-kinded types
+  "-language:implicitConversions",     // Allow definition of implicit functions called views
+  "-unchecked",                        // Enable additional warnings where generated code depends on assumptions.
+  "-Xfatal-warnings",                  // Fail the compilation if there are any warnings.
+  // "-Ypartial-unification",             // Enable partial unification in type constructor inference
+  "-Ywarn-dead-code",                  // Warn when dead code is identified.
+  "-Ywarn-numeric-widen"              // Warn when numerics are widened.
+  //"-Xlog-free-terms",
+)
 
-organization := "org.scorexfoundation"
+lazy val scalac211: Seq[String] = Seq(
+  "-optimize",
+  "-Yno-adapted-args",                 // Do not adapt an argument list (either by inserting () or creating a tuple) to match the receiver.
+  "-Ywarn-inaccessible",               // Warn about inaccessible types in method signatures.
+  "-Xlint:unsound-match",              // Pattern match may not be typesafe.
+  "-Ywarn-infer-any",                  // Warn when a type argument is inferred to be `Any`.
+  "-Ywarn-nullary-override",           // Warn when non-nullary `def f()' overrides nullary `def f'.
+  "-Ywarn-nullary-unit",               // Warn when nullary methods return Unit.
+  "-Xfuture",                          // Turn on future language features.
+)
+
+lazy val scalac212: Seq[String] = Seq(
+  "-opt:simplify-jumps",
+  "-opt:compact-locals",
+  "-opt:copy-propagation",
+  "-opt:box-unbox",
+  "-opt:closure-invocations",
+  "-opt:unreachable-code",
+  "-Yno-adapted-args",                 // Do not adapt an argument list (either by inserting () or creating a tuple) to match the receiver.
+  "-Ywarn-inaccessible",               // Warn about inaccessible types in method signatures.
+  "-Ywarn-unused:implicits",           // Warn if an implicit parameter is unused.
+  "-Ywarn-unused:imports",             // Warn if an import selector is not referenced.
+  "-Ywarn-unused:locals",              // Warn if a local definition is unused.
+  "-Ywarn-unused:params",              // Warn if a value parameter is unused.
+  "-Ywarn-unused:patvars",             // Warn if a variable bound in a pattern is unused.
+  "-Ywarn-unused:privates",            // Warn if a private member is unused.
+  "-Ywarn-extra-implicit",             // Warn when more than one implicit parameter section is defined.
+  "-Xlint:adapted-args",               // Warn if an argument list is modified to match the receiver.
+  "-Xlint:by-name-right-associative",  // By-name parameter of right associative operator.
+  "-Xlint:constant",                   // Evaluation of a constant arithmetic expression results in an error.
+  "-Xlint:delayedinit-select",         // Selecting member of DelayedInit.
+  "-Xlint:doc-detached",               // A Scaladoc comment appears to be detached from its element.
+  "-Xlint:inaccessible",               // Warn about inaccessible types in method signatures.
+  "-Xlint:infer-any",                  // Warn when a type argument is inferred to be `Any`.
+  "-Xlint:missing-interpolator",       // A string literal appears to be missing an interpolator id.
+  "-Xlint:nullary-override",           // Warn when non-nullary `def f()' overrides nullary `def f'.
+  "-Xlint:nullary-unit",               // Warn when nullary methods return Unit.
+  "-Xlint:option-implicit",            // Option.apply used implicit view.
+  "-Xlint:package-object-classes",     // Class or object defined in package object.
+  "-Xlint:poly-implicit-overload",     // Parameterized overloaded implicit methods are not visible as view bounds.
+  "-Xlint:private-shadow",             // A private field (or class parameter) shadows a superclass field.
+  "-Xlint:stars-align",                // Pattern sequence wildcard must align with sequence component.
+  "-Xlint:type-parameter-shadow",      // A local type parameter shadows a type already in scope.
+  "-Xlint:unsound-match",              // Pattern match may not be typesafe.
+  "-Ywarn-infer-any",                  // Warn when a type argument is inferred to be `Any`.
+  "-Xfuture",                          // Turn on future language features.
+)
+
+lazy val scalac213: Seq[String] = Seq(
+  "-opt:simplify-jumps",
+  "-opt:compact-locals",
+  "-opt:copy-propagation",
+  "-opt:box-unbox",
+  "-opt:closure-invocations",
+  "-opt:unreachable-code",
+  "-Ywarn-unused:implicits",           // Warn if an implicit parameter is unused.
+  "-Ywarn-unused:imports",             // Warn if an import selector is not referenced.
+  "-Ywarn-unused:locals",              // Warn if a local definition is unused.
+  "-Ywarn-unused:params",              // Warn if a value parameter is unused.
+  "-Ywarn-unused:patvars",             // Warn if a variable bound in a pattern is unused.
+  "-Ywarn-unused:privates",            // Warn if a private member is unused.
+  "-Ywarn-extra-implicit",             // Warn when more than one implicit parameter section is defined.
+  "-Xlint:adapted-args",               // Warn if an argument list is modified to match the receiver.
+  "-Xlint:constant",                   // Evaluation of a constant arithmetic expression results in an error.
+  "-Xlint:delayedinit-select",         // Selecting member of DelayedInit.
+  "-Xlint:doc-detached",               // A Scaladoc comment appears to be detached from its element.
+  "-Xlint:inaccessible",               // Warn about inaccessible types in method signatures.
+  "-Xlint:infer-any",                  // Warn when a type argument is inferred to be `Any`.
+  "-Xlint:missing-interpolator",       // A string literal appears to be missing an interpolator id.
+  "-Xlint:option-implicit",            // Option.apply used implicit view.
+  "-Xlint:package-object-classes",     // Class or object defined in package object.
+  "-Xlint:poly-implicit-overload",     // Parameterized overloaded implicit methods are not visible as view bounds.
+  "-Xlint:private-shadow",             // A private field (or class parameter) shadows a superclass field.
+  "-Xlint:stars-align",                // Pattern sequence wildcard must align with sequence component.
+  "-Xlint:type-parameter-shadow",      // A local type parameter shadows a type already in scope.
+)
+
 
 lazy val scala213 = "2.13.8"
 lazy val scala212 = "2.12.15"
@@ -16,73 +105,94 @@ javacOptions ++=
     "-target" :: "1.8" ::
     Nil
 
-resolvers ++= Seq("Sonatype Releases" at "https://oss.sonatype.org/content/repositories/releases/",
-  "SonaType" at "https://oss.sonatype.org/content/groups/public",
-  "Typesafe maven releases" at "https://repo.typesafe.com/typesafe/maven-releases/",
-  "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"
+lazy val utilSettings = Seq(
+  organization := "org.scorexfoundation",
+  licenses := Seq("CC0" -> url("https://creativecommons.org/publicdomain/zero/1.0/legalcode")),
+  homepage := Some(url("http://github.com/ScorexFoundation/scorex-util")),
+  description := "Common tools for scorex projects",
+
+  resolvers += Resolver.sonatypeRepo("public"),
+  libraryDependencies ++= Seq(
+//    scalaOrganization.value % "scala-reflect" % scalaVersion.value % "provided",
+    "org.rudogma" %%% "supertagged" % "2.0-RC2",
+    "org.scalatest" %%% "scalatest" % "3.3.0-SNAP3" % Test,
+    "org.scalatest" %%% "scalatest-propspec" % "3.3.0-SNAP3" % Test,
+    "org.scalatest" %%% "scalatest-shouldmatchers" % "3.3.0-SNAP3" % Test,
+    "org.scalatestplus" %%% "scalacheck-1-15" % "3.3.0.0-SNAP3" % Test,
+    "org.scalacheck" %%% "scalacheck" % "1.15.2" % Test
+  ),
+
+  scalacOptions := {
+    CrossVersion.partialVersion(scalaVersion.value) match {
+      case Some((2, n)) if n == 13 =>
+        scalac ++ scalac213
+      case Some((2, n)) if n == 12 =>
+        scalac ++ scalac212
+      case Some((2, 11)) =>
+        scalac ++ scalac211
+    }
+  },
+
+  publishMavenStyle := true,
+
+  publishTo := sonatypePublishToBundle.value,
+  pomExtra := (
+      <developers>
+        <developer>
+          <id>kushti</id>
+          <name>Alexander Chepurnoy</name>
+          <url>http://chepurnoy.org/</url>
+        </developer>
+        <developer>
+          <id>aslesarenko</id>
+          <name>Alexander Slesarenko</name>
+          <url>https://github.com/aslesarenko/</url>
+        </developer>
+      </developers>
+      ),
+  scmInfo := Some(
+    ScmInfo(
+      url("https://github.com/ScorexFoundation/scorex-util"),
+      "scm:git@github.com:ScorexFoundation/scorex-util.git"
+    )
+  )
 )
 
-libraryDependencies ++= Seq(
-  "org.rudogma" %% "supertagged" % "2.0-RC2",
-  "org.scalatest" %% "scalatest" % "3.1.1" % Test,
-  "org.scalacheck" %% "scalacheck" % "1.14.+" % Test,
-  "org.scalatestplus" %% "scalatestplus-scalacheck" % "3.1.0.0-RC2" % Test
-)
-
-//lazy val core = crossProject(JSPlatform, JVMPlatform)
-//    .in(file("."))
-//    .settings(moduleName := "debox")
-//    .settings(deboxSettings)
-//    .jvmSettings(
-//      libraryDependencies ++= Seq(
+lazy val core = crossProject(JSPlatform, JVMPlatform)
+    .in(file("."))
+    .settings(
+      name := "scorex-util",
+      moduleName := "scorex-util"
+    )
+    .settings(utilSettings)
+    .jvmSettings(
+      scalaVersion := scala213,
+      crossScalaVersions := Seq(scala211, scala212, scala213),
+      libraryDependencies ++= Seq(
 //        "org.typelevel" %%% "spire-macros" % "0.17.0-M1" // Version published for Scala 2.11-2.13
-//      ),
-//      scalaVersion := scala213,
-//      crossScalaVersions := Seq(scala211, scala212, scala213),
-//    )
-//    .jsSettings(
-//      scalaVersion := scala213,
-//      crossScalaVersions := Seq(scala213),
-//      libraryDependencies ++= Seq(
+      ),
+    )
+    .jsSettings(
+      scalaVersion := scala213,
+      crossScalaVersions := Seq(scala213),
+      libraryDependencies ++= Seq(
 //        "org.typelevel" %%% "spire-macros" % "0.17.0"  // Version supporting Scala.js 1.x 2.13, 3.x
-//      ),
-//      parallelExecution in Test := false
-//    )
+      ),
+      Test / parallelExecution := false
+    )
 
+Test / publishArtifact := true
+pomIncludeRepository := { _ => false }
 
-publishMavenStyle in ThisBuild := true
-publishTo := sonatypePublishToBundle.value
-publishArtifact in Test := true
+// prefix version with "-SNAPSHOT" for builds without a git tag
+ThisBuild / dynverSonatypeSnapshots := true
+// use "-" instead of default "+"
+ThisBuild / dynverSeparator := "-"
 
 credentials ++= (for {
   username <- Option(System.getenv().get("SONATYPE_USERNAME"))
   password <- Option(System.getenv().get("SONATYPE_PASSWORD"))
 } yield Credentials("Sonatype Nexus Repository Manager", "oss.sonatype.org", username, password)).toSeq
-
-fork in ThisBuild := true
-
-pomIncludeRepository in ThisBuild := { _ => false }
-
-licenses := Seq("CC0" -> url("https://creativecommons.org/publicdomain/zero/1.0/legalcode"))
-homepage := Some(url("https://github.com/ScorexFoundation/scorex-util"))
-pomExtra :=
-  <developers>
-    <developer>
-      <id>kushti</id>
-      <name>Alexander Chepurnoy</name>
-      <url>http://chepurnoy.org/</url>
-    </developer>
-    <developer>
-      <id>aslesarenko</id>
-      <name>Alexander Slesarenko</name>
-      <url>https://github.com/aslesarenko/</url>
-    </developer>
-  </developers>
-
-// prefix version with "-SNAPSHOT" for builds without a git tag
-dynverSonatypeSnapshots in ThisBuild := true
-// use "-" instead of default "+"
-dynverSeparator in ThisBuild := "-"
 
 
 // PGP key for signing a release build published to sonatype
