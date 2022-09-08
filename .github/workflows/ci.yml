@@ -48,7 +48,7 @@ jobs:
           key: ${{ runner.os }}-sbt-cache-v2-${{ hashFiles('**/*.sbt') }}-${{ hashFiles('project/build.properties') }}
 
       - name: Runs tests and collect coverage
-        run: sbt ++${{ matrix.scala }} coverage coreJVM/test coreJVM/coverageReport coreJVM/coverageAggregate
+        run: sbt ++${{ matrix.scala }} coreJVM/test
 
       - name: Upload coverage report to Codecov
         uses: codecov/codecov-action@v1
