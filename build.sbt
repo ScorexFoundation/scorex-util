@@ -23,7 +23,7 @@ resolvers ++= Seq("Sonatype Releases" at "https://oss.sonatype.org/content/repos
 )
 
 libraryDependencies ++= Seq(
-  "org.rudogma" %% "supertagged" % "1.5",
+  "org.rudogma" %% "supertagged" % "2.0-RC2",
   "org.scalatest" %% "scalatest" % "3.1.1" % Test,
   "org.scalacheck" %% "scalacheck" % "1.14.+" % Test,
   // https://mvnrepository.com/artifact/org.scalatestplus/scalatestplus-scalacheck
