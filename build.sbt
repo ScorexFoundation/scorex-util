@@ -169,6 +169,7 @@ lazy val core = crossProject(JSPlatform, JVMPlatform)
       scalaVersion := scala213,
       crossScalaVersions := Seq(scala211, scala212, scala213),
       libraryDependencies ++= Seq(
+        "com.typesafe.scala-logging" %%% "scala-logging" % "3.9.2"
 //        "org.typelevel" %%% "spire-macros" % "0.17.0-M1" // Version published for Scala 2.11-2.13
       ),
     )
