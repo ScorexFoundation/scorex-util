@@ -175,7 +175,7 @@ lazy val core = crossProject(JSPlatform, JVMPlatform)
     )
     .jsSettings(
       scalaVersion := scala213,
-      crossScalaVersions := Seq(scala213),
+      crossScalaVersions := Seq(scala212, scala213),
       libraryDependencies ++= Seq(
 //        "org.typelevel" %%% "spire-macros" % "0.17.0"  // Version supporting Scala.js 1.x 2.13, 3.x
       ),
