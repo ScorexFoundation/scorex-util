@@ -99,6 +99,7 @@ lazy val scala211 = "2.11.12"
 
 crossScalaVersions := Seq(scala211, scala212, scala213)
 scalaVersion := scala212
+organization := "org.scorexfoundation"
 
 javacOptions ++=
   "-source" :: "1.8" ::
@@ -106,7 +107,6 @@ javacOptions ++=
     Nil
 
 lazy val utilSettings = Seq(
-  organization := "org.scorexfoundation",
   licenses := Seq("CC0" -> url("https://creativecommons.org/publicdomain/zero/1.0/legalcode")),
   homepage := Some(url("http://github.com/ScorexFoundation/scorex-util")),
   description := "Common tools for scorex projects",
@@ -170,14 +170,12 @@ lazy val core = crossProject(JSPlatform, JVMPlatform)
       crossScalaVersions := Seq(scala211, scala212, scala213),
       libraryDependencies ++= Seq(
         "com.typesafe.scala-logging" %%% "scala-logging" % "3.9.2"
-//        "org.typelevel" %%% "spire-macros" % "0.17.0-M1" // Version published for Scala 2.11-2.13
       ),
     )
     .jsSettings(
       scalaVersion := scala213,
       crossScalaVersions := Seq(scala212, scala213),
       libraryDependencies ++= Seq(
-//        "org.typelevel" %%% "spire-macros" % "0.17.0"  // Version supporting Scala.js 1.x 2.13, 3.x
       ),
       Test / parallelExecution := false
     )
