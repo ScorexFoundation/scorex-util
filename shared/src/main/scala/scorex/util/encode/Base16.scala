@@ -33,6 +33,10 @@ object Base16 extends BytesEncoder {
     new String(buf)
   }
 
+  /** Decodes a hex encoded string into a byte array.
+    * @param input - hex encoded string
+    * @return - decoded byte array
+    */
   def decode(input: String): Try[Array[Byte]] = {
     var isError = false
     var errorMsg = ""

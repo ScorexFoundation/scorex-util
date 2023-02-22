@@ -81,6 +81,7 @@ object Extensions {
     }
   }
 
+  /** Extension methods for `Iterable` type */
   implicit class TraversableOps[A, Source[X] <: Iterable[X]](val xs: Source[A]) extends AnyVal {
 
     /**
