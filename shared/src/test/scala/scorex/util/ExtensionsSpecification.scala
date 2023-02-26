@@ -12,7 +12,7 @@ class ExtensionsSpecification extends AnyPropSpec
 
   property("ByteOps.toUByte") {
     forAll { b: Byte =>
-      val expected = if (b >= 0) b else 255 + b + 1
+      val expected = if (b >= 0) b.toInt else 255 + b + 1
       b.toUByte shouldBe expected
     }
   }

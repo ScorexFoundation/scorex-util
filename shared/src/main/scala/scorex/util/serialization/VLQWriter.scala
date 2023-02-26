@@ -21,7 +21,7 @@ trait VLQWriter extends Writer {
     * @param x signed Short
     */
   @inline override def putShort(x: Short): this.type = {
-    putULong(encodeZigZagInt(x))
+    putULong(encodeZigZagInt(x.toInt).toLong)
   }
 
   /**
@@ -35,7 +35,7 @@ trait VLQWriter extends Writer {
     */
   @inline override def putUShort(x: Int): this.type = {
     require(x >= 0 && x <= 0xFFFF, s"Value $x is out of unsigned short range")
-    putUInt(x)
+    putUInt(x.toLong)
   }
 
   /**
@@ -50,7 +50,7 @@ trait VLQWriter extends Writer {
     *       encoding negative values than pure VLQ.
     * @param x signed Int
     */
-  @inline override def putInt(x: Int): this.type = putULong(encodeZigZagInt(x))
+  @inline override def putInt(x: Int): this.type = putULong(encodeZigZagInt(x).toLong)
 
   /**
     * Encode unsigned Int value using VLQ.
@@ -156,7 +156,7 @@ trait VLQWriter extends Writer {
   override def putShortString(s: String): this.type = {
     val bytes = s.getBytes
     require(bytes.size < 256)
-    putUByte(bytes.size.toByte)
+    putUByte(bytes.size)
     putBytes(bytes)
     this
   }

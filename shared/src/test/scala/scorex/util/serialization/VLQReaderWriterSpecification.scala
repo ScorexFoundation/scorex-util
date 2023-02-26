@@ -77,16 +77,16 @@ trait VLQReaderWriterSpecification extends AnyPropSpec
           case v: Byte => writer.put(v)
           case v: Short =>
             writer.putShort(v)
-            if (v >= 0) writer.putUShort(v)
+            if (v >= 0) writer.putUShort(v.toInt)
           case v: Int =>
             writer.putInt(v)
-            if (v >= 0) writer.putUInt(v)
+            if (v >= 0) writer.putUInt(v.toLong)
           case v: Long =>
             // test all paths
             writer.putLong(v)
             writer.putULong(v)
-          case v: Array[Byte] => writer.putUShort(v.length.toShort).putBytes(v)
-          case v: Array[Boolean] => writer.putUShort(v.length.toShort).putBits(v)
+          case v: Array[Byte] => writer.putUShort(v.length).putBytes(v)
+          case v: Array[Boolean] => writer.putUShort(v.length).putBits(v)
           case _ => fail(s"writer: unsupported value type: ${any.getClass}");
         }
       }
@@ -247,11 +247,11 @@ trait VLQReaderWriterSpecification extends AnyPropSpec
 
   property("getUShort range check assertion") {
     def check(in: Int): Unit =
-      byteBufReader(byteArrayWriter().putUInt(in).toBytes).getUShort() shouldBe in
+      byteBufReader(byteArrayWriter().putUInt(in.toLong).toBytes).getUShort() shouldBe in
 
     def checkFail(in: Int): Unit =
       an[IllegalArgumentException] should be thrownBy
-        byteBufReader(byteArrayWriter().putUInt(in).toBytes).getUShort()
+        byteBufReader(byteArrayWriter().putUInt(in.toLong).toBytes).getUShort()
 
     check(0)
     check(0xFFFF)
@@ -609,7 +609,7 @@ trait VLQReaderWriterSpecification extends AnyPropSpec
   private def printHolesInByteArraySpace(): Unit = {
     var v = Short.MinValue
     while (v <= Short.MaxValue) {
-      val bytes = BigInt(v).toByteArray
+      val bytes = BigInt(v.toInt).toByteArray
       try {
         val deserV = byteBufReader(bytes).getShort()
         val roundtripBytes = byteArrayWriter().putShort(deserV).toBytes
@@ -629,17 +629,17 @@ trait VLQReaderWriterSpecification extends AnyPropSpec
 
   property("putUShort, putUInt, putULong equivalence") {
     forAll(Arbitrary.arbShort.arbitrary.suchThat(_ >= 0)) { v =>
-      val expected = byteArrayWriter().putUShort(v).toBytes
-      byteArrayWriter().putUInt(v).toBytes shouldEqual expected
-      byteArrayWriter().putULong(v).toBytes shouldEqual expected
+      val expected = byteArrayWriter().putUShort(v.toInt).toBytes
+      byteArrayWriter().putUInt(v.toLong).toBytes shouldEqual expected
+      byteArrayWriter().putULong(v.toLong).toBytes shouldEqual expected
     }
   }
 
   property("putShort, putInt, putLong equivalence") {
     forAll { v: Short =>
       val expected = byteArrayWriter().putShort(v).toBytes
-      byteArrayWriter().putInt(v).toBytes shouldEqual expected
-      byteArrayWriter().putLong(v).toBytes shouldEqual expected
+      byteArrayWriter().putInt(v.toInt).toBytes shouldEqual expected
+      byteArrayWriter().putLong(v.toLong).toBytes shouldEqual expected
     }
   }
 }

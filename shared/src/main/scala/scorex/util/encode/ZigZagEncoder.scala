@@ -1,7 +1,5 @@
 package scorex.util.encode
 
-import scorex.util.serialization.VLQByteBufferWriter
-
 object ZigZagEncoder {
 
   /**
