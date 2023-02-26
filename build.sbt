@@ -107,6 +107,7 @@ javacOptions ++=
     Nil
 
 lazy val utilSettings = Seq(
+  organization := "org.scorexfoundation",
   licenses := Seq("CC0" -> url("https://creativecommons.org/publicdomain/zero/1.0/legalcode")),
   homepage := Some(url("http://github.com/ScorexFoundation/scorex-util")),
   description := "Common tools for scorex projects",
@@ -132,9 +133,8 @@ lazy val utilSettings = Seq(
         scalac ++ scalac211
     }
   },
-
+  javacOptions ++= javacReleaseOption,
   publishMavenStyle := true,
-
   publishTo := sonatypePublishToBundle.value,
   pomExtra := (
       <developers>
@@ -160,10 +160,7 @@ lazy val utilSettings = Seq(
 
 lazy val core = crossProject(JSPlatform, JVMPlatform)
     .in(file("."))
-    .settings(
-      name := "scorex-util",
-      moduleName := "scorex-util"
-    )
+    .settings(moduleName := "scorex-util")
     .settings(utilSettings)
     .jvmSettings(
       scalaVersion := scala213,
@@ -180,13 +177,21 @@ lazy val core = crossProject(JSPlatform, JVMPlatform)
       Test / parallelExecution := false
     )
 
-Test / publishArtifact := true
-pomIncludeRepository := { _ => false }
+def javacReleaseOption = {
+  if (System.getProperty("java.version").startsWith("1."))
+  // java <9 "--release" is not supported
+    Seq()
+  else
+    Seq("--release", "8")
+}
 
 // prefix version with "-SNAPSHOT" for builds without a git tag
 ThisBuild / dynverSonatypeSnapshots := true
 // use "-" instead of default "+"
 ThisBuild / dynverSeparator := "-"
+
+Test / publishArtifact := true
+pomIncludeRepository := { _ => false }
 
 credentials ++= (for {
   username <- Option(System.getenv().get("SONATYPE_USERNAME"))
