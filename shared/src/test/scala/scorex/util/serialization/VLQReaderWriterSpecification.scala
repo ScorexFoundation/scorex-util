@@ -19,7 +19,7 @@ trait VLQReaderWriterSpecification extends AnyPropSpec
   private val seqPrimValGen: Gen[Seq[Any]] = for {
     length <- Gen.chooseNum(1, 1000)
     anyValSeq <- Gen.listOfN(length,
-      Gen.oneOf(
+      Gen.oneOf[Any](
         Arbitrary.arbByte.arbitrary,
         Arbitrary.arbShort.arbitrary,
         Arbitrary.arbInt.arbitrary,

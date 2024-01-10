@@ -104,7 +104,7 @@ class ExtensionsSpecification extends AnyPropSpec
 
   property("TraversableOps.cast") {
     List(1,2,3,4).cast[Int] shouldBe List(1,2,3,4)
-    an[IllegalArgumentException] should be thrownBy List(1,"2",3,4).cast[Int]
+    an[IllegalArgumentException] should be thrownBy List[Any](1,"2",3,4).cast[Int]
   }
 
 }

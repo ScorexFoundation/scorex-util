@@ -10,8 +10,6 @@ lazy val scalac: Seq[String] = Seq(
   "-unchecked",                        // Enable additional warnings where generated code depends on assumptions.
 //  "-Xfatal-warnings",                  // Fail the compilation if there are any warnings.
   // "-Ypartial-unification",             // Enable partial unification in type constructor inference
-  "-Ywarn-dead-code",                  // Warn when dead code is identified.
-  "-Ywarn-numeric-widen"              // Warn when numerics are widened.
   //"-Xlog-free-terms",
 )
 
@@ -24,6 +22,9 @@ lazy val scalac211: Seq[String] = Seq(
   "-Ywarn-nullary-override",           // Warn when non-nullary `def f()' overrides nullary `def f'.
   "-Ywarn-nullary-unit",               // Warn when nullary methods return Unit.
   "-Xfuture",                          // Turn on future language features.
+  "-Ywarn-dead-code",                  // Warn when dead code is identified.
+  "-Ywarn-numeric-widen"               // Warn when numerics are widened.
+
 )
 
 lazy val scalac212: Seq[String] = Seq(
@@ -61,6 +62,9 @@ lazy val scalac212: Seq[String] = Seq(
   "-Xlint:unsound-match",              // Pattern match may not be typesafe.
   "-Ywarn-infer-any",                  // Warn when a type argument is inferred to be `Any`.
   "-Xfuture",                          // Turn on future language features.
+  "-Ywarn-dead-code",                  // Warn when dead code is identified.
+  "-Ywarn-numeric-widen"               // Warn when numerics are widened.
+
 )
 
 lazy val scalac213: Seq[String] = Seq(
@@ -90,6 +94,9 @@ lazy val scalac213: Seq[String] = Seq(
   "-Xlint:private-shadow",             // A private field (or class parameter) shadows a superclass field.
   "-Xlint:stars-align",                // Pattern sequence wildcard must align with sequence component.
   "-Xlint:type-parameter-shadow",      // A local type parameter shadows a type already in scope.
+  "-Ywarn-dead-code",                  // Warn when dead code is identified.
+  "-Ywarn-numeric-widen"               // Warn when numerics are widened.
+
 )
 
 lazy val scalac3: Seq[String] = Seq(
