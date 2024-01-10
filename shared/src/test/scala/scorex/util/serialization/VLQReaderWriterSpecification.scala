@@ -70,7 +70,7 @@ trait VLQReaderWriterSpecification extends AnyPropSpec
   property("round trip serialization/deserialization of arbitrary value list") {
     // increase threshold to make sure we cover a lot of types combination
     // and a good diversity withing a values of the each type
-    forAll(seqPrimValGen, minSuccessful(500)) { values: Seq[Any] =>
+    forAll(seqPrimValGen, minSuccessful(500)) { (values: Seq[Any]) =>
       val writer = byteArrayWriter()
       for (any <- values) {
         any match {
@@ -122,7 +122,7 @@ trait VLQReaderWriterSpecification extends AnyPropSpec
     // Gen.choose does not always include range limit values
     bytesLong(low).length shouldBe size
     bytesLong(high).length shouldBe size
-    forAll(Gen.choose(low, high)) { v: Long =>
+    forAll(Gen.choose(low, high)) { (v: Long) =>
       bytesLong(v).length shouldBe size
     }
   }
@@ -148,7 +148,7 @@ trait VLQReaderWriterSpecification extends AnyPropSpec
     // Gen.choose does not always include range limit values
     bytesZigZaggedLong(low).length shouldBe size
     bytesZigZaggedLong(high).length shouldBe size
-    forAll(Gen.choose(low, high)) { v: Long =>
+    forAll(Gen.choose(low, high)) { (v: Long) =>
       bytesZigZaggedLong(v).length shouldBe size
     }
   }
@@ -185,7 +185,7 @@ trait VLQReaderWriterSpecification extends AnyPropSpec
   }
 
   property("fail deserialization by deliberately messing with different methods") {
-    forAll(Gen.chooseNum(1L, Long.MaxValue)) { v: Long =>
+    forAll(Gen.chooseNum(1L, Long.MaxValue)) { (v: Long) =>
       val writer = byteArrayWriter()
       writer.putULong(v)
       writer.putLong(v)
@@ -306,52 +306,52 @@ trait VLQReaderWriterSpecification extends AnyPropSpec
   }
 
   property("Byte roundtrip") {
-    forAll { v: Byte => byteBufReader(byteArrayWriter().put(v).toBytes).getByte() shouldBe v }
+    forAll { (v: Byte) => byteBufReader(byteArrayWriter().put(v).toBytes).getByte() shouldBe v }
   }
 
   property("unsigned Byte roundtrip") {
-    forAll { v: Byte =>
+    forAll { (v: Byte) =>
       val uv: Int = v & 0xFF
       byteBufReader(byteArrayWriter().putUByte(uv).toBytes).getUByte() shouldBe uv
     }
   }
 
   property("Short roundtrip") {
-    forAll { v: Short => byteBufReader(byteArrayWriter().putShort(v).toBytes).getShort() shouldBe v }
+    forAll { (v: Short) => byteBufReader(byteArrayWriter().putShort(v).toBytes).getShort() shouldBe v }
   }
 
   property("unsigned Short roundtrip") {
-    forAll { v: Short =>
+    forAll { (v: Short) =>
       val uv: Int = v & 0xFFFF
       byteBufReader(byteArrayWriter().putUShort(uv).toBytes).getUShort() shouldBe uv
     }
   }
 
   property("Int roundtrip") {
-    forAll { v: Int => byteBufReader(byteArrayWriter().putInt(v).toBytes).getInt() shouldBe v }
+    forAll { (v: Int) => byteBufReader(byteArrayWriter().putInt(v).toBytes).getInt() shouldBe v }
   }
 
   property("unsigned Int roundtrip") {
-    forAll { v: Int =>
+    forAll { (v: Int) =>
       val uv: Long = v.toLong + (Int.MinValue.toLong * -1)
       byteBufReader(byteArrayWriter().putUInt(uv).toBytes).getUInt() shouldBe uv
     }
   }
 
   property("Long roundtrip") {
-    forAll { v: Long => byteBufReader(byteArrayWriter().putLong(v).toBytes).getLong() shouldBe v }
+    forAll { (v: Long) => byteBufReader(byteArrayWriter().putLong(v).toBytes).getLong() shouldBe v }
   }
 
   property("ULong roundtrip") {
-    forAll { v: Long => byteBufReader(byteArrayWriter().putULong(v).toBytes).getULong() shouldBe v }
+    forAll { (v: Long) => byteBufReader(byteArrayWriter().putULong(v).toBytes).getULong() shouldBe v }
   }
 
   property("Boolean array roundtrip") {
-    forAll { v: Array[Boolean] => byteBufReader(byteArrayWriter().putBits(v).toBytes).getBits(v.length) shouldBe v }
+    forAll { (v: Array[Boolean]) => byteBufReader(byteArrayWriter().putBits(v).toBytes).getBits(v.length) shouldBe v }
   }
 
   property("short string roundtrip") {
-    forAll(Gen.alphaStr.suchThat(_.length < 256)) { v: String =>
+    forAll(Gen.alphaStr.suchThat(_.length < 256)) { (v: String) =>
       byteBufReader(byteArrayWriter().putShortString(v).toBytes).getShortString() shouldBe v
     }
   }
@@ -636,7 +636,7 @@ trait VLQReaderWriterSpecification extends AnyPropSpec
   }
 
   property("putShort, putInt, putLong equivalence") {
-    forAll { v: Short =>
+    forAll { (v: Short) =>
       val expected = byteArrayWriter().putShort(v).toBytes
       byteArrayWriter().putInt(v.toInt).toBytes shouldEqual expected
       byteArrayWriter().putLong(v.toLong).toBytes shouldEqual expected

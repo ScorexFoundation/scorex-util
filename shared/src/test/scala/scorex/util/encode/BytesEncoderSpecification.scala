@@ -13,7 +13,7 @@ trait BytesEncoderSpecification extends AnyPropSpec
   val encoder: BytesEncoder
 
   property("Encoding then decoding preserves data") {
-    forAll { data: Array[Byte] =>
+    forAll { (data: Array[Byte]) =>
       whenever(data.length > 0 && data.head != 0) {
         val encoded = encoder.encode(data)
         encoded.find(c => !encoder.Alphabet.contains(c)) shouldBe None
@@ -24,7 +24,7 @@ trait BytesEncoderSpecification extends AnyPropSpec
   }
 
   property("Decoding should return failure on incorrect characters") {
-    forAll { str: String =>
+    forAll { (str: String) =>
       whenever(str.exists(c => !encoder.Alphabet.contains(c))) {
         encoder.decode(str).isFailure shouldBe true
       }

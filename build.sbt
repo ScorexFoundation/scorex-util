@@ -93,10 +93,10 @@ lazy val scalac213: Seq[String] = Seq(
 )
 
 lazy val scalac3: Seq[String] = Seq(
-  "-source:3.0-migration"
+  "-source:3.0-migration" // makes the compiler forgiving on most of the dropped features, printing warnings in place of errors
 )
 
-lazy val scala213 = "2.13.11"
+lazy val scala213 = "2.13.12"
 lazy val scala212 = "2.12.18"
 lazy val scala211 = "2.11.12"
 lazy val scala3   = "3.3.1"
