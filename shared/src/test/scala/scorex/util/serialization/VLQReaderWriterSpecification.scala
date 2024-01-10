@@ -185,7 +185,7 @@ trait VLQReaderWriterSpecification extends AnyPropSpec
   }
 
   property("fail deserialization by deliberately messing with different methods") {
-    forAll(Gen.chooseNum(1, Long.MaxValue)) { v: Long =>
+    forAll(Gen.chooseNum(1L, Long.MaxValue)) { v: Long =>
       val writer = byteArrayWriter()
       writer.putULong(v)
       writer.putLong(v)
