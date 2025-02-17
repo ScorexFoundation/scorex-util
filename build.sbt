@@ -103,10 +103,11 @@ lazy val scalac3: Seq[String] = Seq(
   "-source:3.0-migration" // makes the compiler forgiving on most of the dropped features, printing warnings in place of errors
 )
 
-lazy val scala213 = "2.13.12"
-lazy val scala212 = "2.12.18"
+lazy val scala213 = "2.13.16"
+lazy val scala212 = "2.12.20"
 lazy val scala211 = "2.11.12"
-lazy val scala3   = "3.3.1"
+lazy val scala3   = "3.3.5"
+lazy val scalatestVersion = "3.2.19"
 
 crossScalaVersions := Seq(scala211, scala212, scala213, scala3)
 scalaVersion := scala213
@@ -125,30 +126,27 @@ lazy val utilSettings = Seq(
 
   resolvers ++= Resolver.sonatypeOssRepos("snapshots"),
   libraryDependencies ++= Seq(
-    ("org.rudogma" %%% "supertagged" % "2.0-RC2").cross(CrossVersion.for3Use2_13),
+    "org.scalatest" %%% "scalatest" % scalatestVersion % Test,
+    "org.scalatest" %%% "scalatest-propspec" % scalatestVersion % Test,
+    "org.scalatest" %%% "scalatest-shouldmatchers" % scalatestVersion % Test
   ) ++ {
     if (scalaVersion.value == scala3)
       Seq(
-        "org.scalatest" %%% "scalatest" % "3.3.0-alpha.1" % Test,
-        "org.scalatest" %%% "scalatest-propspec" % "3.3.0-alpha.1" % Test,
-        "org.scalatest" %%% "scalatest-shouldmatchers" % "3.3.0-alpha.1" % Test,
-        "org.scalacheck" %%% "scalacheck" % "1.15.3" % Test,
-        "org.scalatestplus" %%% "scalacheck-1-17" % "3.3.0.0-alpha.1" % Test
+        "org.scalacheck" %%% "scalacheck" % "1.18.1" % Test,
+        "org.scalatestplus" %%% "scalacheck-1-18" % "3.2.19.0" % Test
       )
     else // use last versions with Scala 2.11 support
       Seq(
-        "org.scalatest" %%% "scalatest" % "3.3.0-SNAP3" % Test,
-        "org.scalatest" %%% "scalatest-propspec" % "3.3.0-SNAP3" % Test,
-        "org.scalatest" %%% "scalatest-shouldmatchers" % "3.3.0-SNAP3" % Test,
+        "org.rudogma" %%% "supertagged" % "2.0-RC2",
         "org.scalacheck" %%% "scalacheck" % "1.15.2" % Test,
         "org.scalatestplus" %%% "scalacheck-1-15" % "3.3.0.0-SNAP3" % Test
       )
   },
   scalacOptions ++= {
     CrossVersion.partialVersion(scalaVersion.value) match {
-      case Some((2, n)) if n == 13 =>
+      case Some((2, 13)) =>
         scalac ++ scalac213
-      case Some((2, n)) if n == 12 =>
+      case Some((2, 12)) =>
         scalac ++ scalac212
       case Some((2, 11)) =>
         scalac ++ scalac211
