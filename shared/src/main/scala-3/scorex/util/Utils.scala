@@ -1,8 +1,9 @@
-package scorex
+package scorex.util
 
 import scorex.util.encode.Base16
 
 opaque type ModifierId <: String = String
+
 object ModifierId {
   def apply(s: String): ModifierId = s
 }
