@@ -10,8 +10,6 @@ lazy val scalac: Seq[String] = Seq(
   "-unchecked",                        // Enable additional warnings where generated code depends on assumptions.
 //  "-Xfatal-warnings",                  // Fail the compilation if there are any warnings.
   // "-Ypartial-unification",             // Enable partial unification in type constructor inference
-  "-Ywarn-dead-code",                  // Warn when dead code is identified.
-  "-Ywarn-numeric-widen"              // Warn when numerics are widened.
   //"-Xlog-free-terms",
 )
 
@@ -24,6 +22,9 @@ lazy val scalac211: Seq[String] = Seq(
   "-Ywarn-nullary-override",           // Warn when non-nullary `def f()' overrides nullary `def f'.
   "-Ywarn-nullary-unit",               // Warn when nullary methods return Unit.
   "-Xfuture",                          // Turn on future language features.
+  "-Ywarn-dead-code",                  // Warn when dead code is identified.
+  "-Ywarn-numeric-widen"               // Warn when numerics are widened.
+
 )
 
 lazy val scalac212: Seq[String] = Seq(
@@ -61,6 +62,9 @@ lazy val scalac212: Seq[String] = Seq(
   "-Xlint:unsound-match",              // Pattern match may not be typesafe.
   "-Ywarn-infer-any",                  // Warn when a type argument is inferred to be `Any`.
   "-Xfuture",                          // Turn on future language features.
+  "-Ywarn-dead-code",                  // Warn when dead code is identified.
+  "-Ywarn-numeric-widen"               // Warn when numerics are widened.
+
 )
 
 lazy val scalac213: Seq[String] = Seq(
@@ -90,15 +94,22 @@ lazy val scalac213: Seq[String] = Seq(
   "-Xlint:private-shadow",             // A private field (or class parameter) shadows a superclass field.
   "-Xlint:stars-align",                // Pattern sequence wildcard must align with sequence component.
   "-Xlint:type-parameter-shadow",      // A local type parameter shadows a type already in scope.
+  "-Ywarn-dead-code",                  // Warn when dead code is identified.
+  "-Ywarn-numeric-widen"               // Warn when numerics are widened.
+
 )
 
+lazy val scalac3: Seq[String] = Seq(
+  "-source:3.0-migration" // makes the compiler forgiving on most of the dropped features, printing warnings in place of errors
+)
 
-lazy val scala213 = "2.13.11"
+lazy val scala213 = "2.13.12"
 lazy val scala212 = "2.12.18"
 lazy val scala211 = "2.11.12"
+lazy val scala3   = "3.3.1"
 
-crossScalaVersions := Seq(scala211, scala212, scala213)
-scalaVersion := scala212
+crossScalaVersions := Seq(scala211, scala212, scala213, scala3)
+scalaVersion := scala213
 organization := "org.scorexfoundation"
 
 javacOptions ++=
@@ -112,18 +123,28 @@ lazy val utilSettings = Seq(
   homepage := Some(url("http://github.com/ScorexFoundation/scorex-util")),
   description := "Common tools for scorex projects",
 
-  resolvers += Resolver.sonatypeRepo("public"),
+  resolvers ++= Resolver.sonatypeOssRepos("snapshots"),
   libraryDependencies ++= Seq(
-//    scalaOrganization.value % "scala-reflect" % scalaVersion.value % "provided",
-    "org.rudogma" %%% "supertagged" % "2.0-RC2",
-    "org.scalatest" %%% "scalatest" % "3.3.0-SNAP3" % Test,
-    "org.scalatest" %%% "scalatest-propspec" % "3.3.0-SNAP3" % Test,
-    "org.scalatest" %%% "scalatest-shouldmatchers" % "3.3.0-SNAP3" % Test,
-    "org.scalatestplus" %%% "scalacheck-1-15" % "3.3.0.0-SNAP3" % Test,
-    "org.scalacheck" %%% "scalacheck" % "1.15.2" % Test
-  ),
-
-  scalacOptions := {
+    ("org.rudogma" %%% "supertagged" % "2.0-RC2").cross(CrossVersion.for3Use2_13),
+  ) ++ {
+    if (scalaVersion.value == scala3)
+      Seq(
+        "org.scalatest" %%% "scalatest" % "3.3.0-alpha.1" % Test,
+        "org.scalatest" %%% "scalatest-propspec" % "3.3.0-alpha.1" % Test,
+        "org.scalatest" %%% "scalatest-shouldmatchers" % "3.3.0-alpha.1" % Test,
+        "org.scalacheck" %%% "scalacheck" % "1.15.3" % Test,
+        "org.scalatestplus" %%% "scalacheck-1-17" % "3.3.0.0-alpha.1" % Test
+      )
+    else // use last versions with Scala 2.11 support
+      Seq(
+        "org.scalatest" %%% "scalatest" % "3.3.0-SNAP3" % Test,
+        "org.scalatest" %%% "scalatest-propspec" % "3.3.0-SNAP3" % Test,
+        "org.scalatest" %%% "scalatest-shouldmatchers" % "3.3.0-SNAP3" % Test,
+        "org.scalacheck" %%% "scalacheck" % "1.15.2" % Test,
+        "org.scalatestplus" %%% "scalacheck-1-15" % "3.3.0.0-SNAP3" % Test
+      )
+  },
+  scalacOptions ++= {
     CrossVersion.partialVersion(scalaVersion.value) match {
       case Some((2, n)) if n == 13 =>
         scalac ++ scalac213
@@ -131,6 +152,8 @@ lazy val utilSettings = Seq(
         scalac ++ scalac212
       case Some((2, 11)) =>
         scalac ++ scalac211
+      case Some((3, _)) =>
+        scalac ++ scalac3
     }
   },
   javacOptions ++= javacReleaseOption,
@@ -161,17 +184,17 @@ lazy val utilSettings = Seq(
 lazy val core = crossProject(JSPlatform, JVMPlatform)
     .in(file("."))
     .settings(moduleName := "scorex-util")
-    .settings(utilSettings)
     .jvmSettings(
       scalaVersion := scala213,
-      crossScalaVersions := Seq(scala211, scala212, scala213),
+      crossScalaVersions := Seq(scala211, scala212, scala213, scala3),
       libraryDependencies ++= Seq(
-        "com.typesafe.scala-logging" %%% "scala-logging" % "3.9.2"
+        "com.typesafe.scala-logging" %%% "scala-logging" % "3.9.5"
       ),
     )
+    .settings(utilSettings)
     .jsSettings(
       scalaVersion := scala213,
-      crossScalaVersions := Seq(scala213),
+      crossScalaVersions := Seq(scala3, scala213),
       libraryDependencies ++= Seq(
       ),
       Test / parallelExecution := false

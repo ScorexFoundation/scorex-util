@@ -36,13 +36,13 @@ class ZigZagSpecification extends AnyPropSpec
   }
 
   property("ZigZag Long round trip") {
-    forAll(Gen.chooseNum(Long.MinValue, Long.MaxValue)) { v: Long =>
+    forAll(Gen.chooseNum(Long.MinValue, Long.MaxValue)) { (v: Long) =>
       decodeZigZagLong(encodeZigZagLong(v)) shouldBe v
     }
   }
 
   property("ZigZag Int round trip") {
-    forAll(Gen.chooseNum(Int.MinValue, Int.MaxValue)) { v: Int =>
+    forAll(Gen.chooseNum(Int.MinValue, Int.MaxValue)) { (v: Int) =>
       decodeZigZagInt(encodeZigZagInt(v)) shouldBe v
     }
   }
