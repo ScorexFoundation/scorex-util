@@ -25,7 +25,7 @@ trait VLQReader extends Reader {
     * Decode Short previously encoded with [[VLQWriter.putUShort]] using VLQ.
     * @see [[https://en.wikipedia.org/wiki/Variable-length_quantity]]
     * @return Int
-    * @throws AssertionError for deserialized values not in unsigned Short range
+    * @throws IllegalArgumentException for deserialized values not in unsigned Short range
     */
   @inline override def getUShort(): Int = {
     val x = getULong().toInt
@@ -50,11 +50,24 @@ trait VLQReader extends Reader {
     * Decode Int previously encoded with [[VLQWriter.putUInt]] using VLQ.
     * @see [[https://en.wikipedia.org/wiki/Variable-length_quantity]]
     * @return Long
+    * @throws IllegalArgumentException for deserialized values not in unsigned Int range
     */
   @inline override def getUInt(): Long = {
     val x = getULong()
     require(x >= 0L && x <= 0xFFFFFFFFL, s"$x is out of unsigned int range")
     x
+  }
+
+  /**
+    * Decode Int previously encoded with [[VLQWriter.putUInt]] using VLQ.
+    * @see [[https://en.wikipedia.org/wiki/Variable-length_quantity]]
+    * @return Int
+    * @throws IllegalArgumentException for deserialized values not in unsigned 31-bit Int range
+    */
+  @inline override def getUIntExact(): Int = {
+    val x = getULong()
+    require(x >= 0L && x <= Int.MaxValue.toLong, s"$x is out of unsigned 31-bit int range")
+    x.toInt
   }
 
   /**

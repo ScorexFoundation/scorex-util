@@ -338,6 +338,18 @@ trait VLQReaderWriterSpecification extends AnyPropSpec
     }
   }
 
+  property("unsigned Int roundtrip exact"){
+    forAll(Gen.chooseNum(0, Int.MaxValue)) { x: Int =>
+      byteBufReader(byteArrayWriter().putUInt(x.toLong).toBytes).getUIntExact() shouldBe x
+    }
+    forAll(Gen.chooseNum(Long.MinValue, -1L)) { x: Long =>
+      an[IllegalArgumentException] should be thrownBy byteBufReader(byteArrayWriter().putULong(x).toBytes).getUIntExact()
+    }
+    forAll(Gen.chooseNum(Int.MaxValue.toLong + 1L, Long.MaxValue)) { x: Long =>
+      an[IllegalArgumentException] should be thrownBy byteBufReader(byteArrayWriter().putULong(x).toBytes).getUIntExact()
+    }
+  }
+
   property("Long roundtrip") {
     forAll { (v: Long) => byteBufReader(byteArrayWriter().putLong(v).toBytes).getLong() shouldBe v }
   }

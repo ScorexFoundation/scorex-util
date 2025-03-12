@@ -74,6 +74,7 @@ object Extensions {
       * If `Long` value is out of the possible range for a [[scala.Int]] result,
       * then a `java.lang.ArithmeticException` is thrown.
       */
+    @deprecated("Use Reader#getUIntExact() instead")
     def toIntExact: Int = {
       if (x < Int.MinValue || x > Int.MaxValue)
         throw new ArithmeticException("Int overflow")
@@ -86,7 +87,7 @@ object Extensions {
 
     /**
       * Safely casting each element of collection to be type of `B`.
-      * If element can not to be cast to `B` then `AssertionError` is thrown
+      * If element can not to be cast to `B` then `IllegalArgumentException` is thrown
       */
     def cast[B:ClassTag]: Source[B] = {
 

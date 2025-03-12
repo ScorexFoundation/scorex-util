@@ -68,7 +68,14 @@ abstract class Reader {
     * Decode positive Int.
     * @return signed Long
     */
+  @deprecated("Use getUIntExact() instead")
   def getUInt(): Long
+
+  /**
+    * Decode positive Int.
+    * @return unsigned 31-bit Int
+    */
+  def getUIntExact(): Int
 
   /**
     * Decode signed Long.
